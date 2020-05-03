@@ -19,10 +19,10 @@ def readfq(fp): # this is a generator function
 			yield name, seq, None # yield a fasta record
 			if not last: break
 		else: # this is a fastq record
-			qual = ""
+			qual, seq_len = "", len(seq)
 			for l in fp: # read the quality
 				qual += l.rstrip()
-				if len(qual) >= len(seq): # have read enough quality
+				if len(qual) >= seq_len: # have read enough quality
 					last = None
 					yield name, seq, qual; # yield a fastq record
 					break
