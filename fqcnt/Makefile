@@ -1,6 +1,6 @@
 CFLAGS=-g -Wall -O2
 LIBS=-lz
-PROG=fqcnt_v1_kseq fqcnt_v1_nim
+PROG=fqcnt_v1_c fqcnt_v1_nim
 NIM=nim
 
 ifneq ($(asan),)
@@ -12,7 +12,7 @@ endif
 
 all:$(PROG)
 
-fqcnt_v1_kseq:fqcnt_v1_kseq.c kseq.h
+fqcnt_v1_c:fqcnt_v1_kseq.c kseq.h
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
 fqcnt_v1_nim:fqcnt_v1_klib.nim
