@@ -45,22 +45,7 @@ function it_overlap(a, st, en) {
 	}
 	return b;
 }
-/*
-function it_overlap(a, st, en) {
-	var h, b = [];
-	function ovlp_recur(x, k) {
-		if (x < a.length && a[x][2] <= st) return;
-		if (k > 0 && (x >= a.length || a[x][2] > st)) ovlp_recur(x - (1<<(k-1)), k - 1);
-		if (x < a.length && a[x][0] < en) {
-			if (st < a[x][1]) b.push(a[x]);
-			if (k > 0) ovlp_recur(x + (1<<(k-1)), k - 1);
-		}
-	}
-	for (h = 0; 1<<h <= a.length; ++h);
-	ovlp_recur((1<<(h-1)) - 1, h - 1);
-	return b;
-}
-*/
+
 function main(args)
 {
 	if (args.length < 2) {
