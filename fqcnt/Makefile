@@ -12,11 +12,11 @@ endif
 
 all:$(PROG)
 
-fqcnt_v1_c:fqcnt_v1_kseq.c kseq.h
-	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
+fqcnt_v1_c:fqcnt_v1_kseq.c ../lib/kseq.h
+	$(CC) $(CFLAGS) -I../lib -o $@ $< $(LIBS)
 
-fqcnt_v1_nim:fqcnt_v1_klib.nim klib.nim
-	$(NIM) c -d:release -d:nimEmulateOverflowChecks -o:$@ $<
+fqcnt_v1_nim:fqcnt_v1_klib.nim ../lib/klib.nim
+	$(NIM) c -d:release -d:nimEmulateOverflowChecks -p:../lib -o:$@ $<
 
 clean:
 	rm -fr *.dSYM $(PROG)
