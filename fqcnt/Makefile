@@ -1,21 +1,16 @@
 CFLAGS=-g -Wall -O2
 LIBS=-lz
-PROG=fqcnt_v1_c fqcnt_v1_nim
+PROG=fqcnt_c1_kseq fqcnt_nim1_klib
 NIM=nim
-
-ifneq ($(asan),)
-	CFLAGS+=-fsanitize=address
-	LIBS+=-fsanitize=address
-endif
 
 .PHONY:all clean
 
 all:$(PROG)
 
-fqcnt_v1_c:fqcnt_v1_kseq.c ../lib/kseq.h
+fqcnt_c1_kseq:fqcnt_c1_kseq.c ../lib/kseq.h
 	$(CC) $(CFLAGS) -I../lib -o $@ $< $(LIBS)
 
-fqcnt_v1_nim:fqcnt_v1_klib.nim ../lib/klib.nim
+fqcnt_nim1_klib:fqcnt_nim1_klib.nim ../lib/klib.nim
 	$(NIM) c -d:release -d:nimEmulateOverflowChecks -p:../lib -o:$@ $<
 
 clean:
