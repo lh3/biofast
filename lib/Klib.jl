@@ -368,7 +368,7 @@ function it_index!(a::Vector{Interval{T}}) where T<:Number
 	@inbounds for i = 1:2:length(a)
 		a[i].max, last, last_i = a[i].en, a[i].en, i;
 	end
-	k::Int = 0
+	k::Int = 1
 	@inbounds while 1<<k <= length(a)
 		i0, step = (1<<k), 1<<(k+1)
 		for i = i0:step:length(a)

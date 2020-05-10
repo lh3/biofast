@@ -20,6 +20,7 @@
 |[bedcov\_nim1\_klib.nim](bedcov/bedcov_nim1_klib.nim)|Nim       |[klib.nim](lib/klib.nim)    | 16.9|  497.7 | 25.7|  69.1 |
 |[bedcov\_jl1\_klib.jl](bedcov/bedcov_jl1_klib.jl)    |Julia     |[Klib.jl](lib/Klib.jl)      | 48.7| 6769.9 | 77.1| 290.4 |
 |[bedcov\_js1\_k8.js](bedcov/bedcov_js1_k8.jl)        |Javascript|                            | 75.4| 2219.9 | 87.2| 316.8 |
+|[bedcov\_lua1.lua](bedcov/bedcov_lua1.lua)           |LuaJIT    |                            |     |        |     |       |
 
 [bp]: https://biopython.org/
 [fx.jl]: https://github.com/BioJulia/FASTX.jl
