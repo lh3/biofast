@@ -1,6 +1,7 @@
 module Klib
 
 export getopt, GzFile, close, Bufio, readbyte, readuntil!, FastxReader, FastxRecord
+export Interval, it_index, it_overlap
 
 #
 # Getopt iterator
@@ -348,6 +349,70 @@ function Base.read(f::FastxReader{T}) where {T<:IO}
 	qual = tostring(f.r.bb, lq) # quality read
 	@assert lq == lastindex(qual) # guard against UTF-8
 	return FastxRecord(name, seq, qual, comment)
+end
+
+#
+# Interval overlap query
+#
+
+mutable struct Interval{T}
+	data::T
+	st::Int
+	en::Int
+	max::Int
+end
+
+function it_index!(a::Vector{Interval{T}}) where T<:Number
+	sort!(a, by = x -> x.st)
+	last, last_i = 0, 1
+	@inbounds for i = 1:2:length(a)
+		a[i].max, last, last_i = a[i].en, a[i].en, i;
+	end
+	k::Int = 0
+	@inbounds while 1<<k <= length(a)
+		i0, step = (1<<k), 1<<(k+1)
+		for i = i0:step:length(a)
+			x = 1<<(k-1)
+			a[i].max = max(a[i].en, a[i-x].max)
+			e = if (i + x <= length(a)) a[i+x].max else last end
+			a[i].max = max(a[i].max, e)
+		end
+		last_i = if ((last_i>>k&1) != 0) last_i + (1<<(k-1)) else last_i - (1<<(k-1)) end
+		if (last_i <= length(a)) last = max(last, a[last_i].max) end
+		k += 1
+	end
+end
+
+function it_overlap(a::Vector{Interval{T}}, st::Int, en::Int) where T<:Number
+	b = Vector{Interval{T}}()
+	stack = Vector{Tuple{Int,Int,Int}}()
+	h = 0
+	while (1<<h <= length(a)) h += 1 end
+	h -= 1
+	push!(stack, ((1<<h), h, 0))
+	@inbounds while length(stack) > 0
+		x, h, w = pop!(stack)
+		if h <= 3
+			i0 = ((x-1) >> h << h) + 1
+			i1 = i0 + (1 << (h+1)) - 2
+			i1 = min(i1, length(a))
+			i = i0
+			while i <= i1 && a[i].st < en
+				if (st < a[i].en) push!(b, a[i]) end
+				i += 1
+			end
+		elseif w == 0
+			push!(stack, (x, h, 1))
+			y = x - (1<<(h-1))
+			if y > length(a) || a[y].max > st
+				push!(stack, (y, h - 1, 0))
+			end
+		elseif x <= length(a) && a[x].st < en
+			if (st < a[x].en) push!(b, a[x]) end
+			push!(stack, (x + (1<<(h-1)), h - 1, 0))
+		end
+	end
+	return b
 end
 
 end # module Klib
