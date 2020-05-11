@@ -1,8 +1,9 @@
 ## Introduction
 
-Biofast is a small benchmark for evaluating the performance of several
-programming languages and implementations on a few common tasks in
-the field of Bioinformatics.
+Biofast is a small benchmark for evaluating the performance of programming
+languages and implementations on a few common tasks in the field of
+Bioinformatics. It currently includes two benchmarks: [FASTQ parsing](#fqcnt)
+and [interval query](#bedcov).
 
 ## Results
 
@@ -18,7 +19,7 @@ We tried to avoid other active processes when test programs were running. Most
 programs were only run once, so the recorded timing and peak memory may be
 associated with large variances.
 
-### FASTQ parsing
+### <a name="fqcnt"></a>FASTQ parsing
 
 In this benchmark, we parse a 4-line FASTQ file consisting of 5,682,010
 records and report the number of records and the total length of sequences and
@@ -43,7 +44,7 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)      |Python    |                         | 42.6| 19.4|kseq.h port|
 |[fqcnt\_py5x\_bp.py](fqcnt/fqcnt_py5x_bp.py)      |Python    |[BioPython][bp]          |135.8|107.1|SeqIO.parse|
 
-### Computing the depth and breadth of coverage from BED files
+### <a name="bedcov"></a>Computing the depth and breadth of coverage from BED files
 
 In this benchmark, we load one BED file into memory. We stream another BED file
 and compute coverage of each interval using the [cgranges algorithm][cgr]. The
