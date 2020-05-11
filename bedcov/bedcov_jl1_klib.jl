@@ -24,12 +24,13 @@ function main(args)
 		if get(bed, t[1], nothing) == nothing
 			println(t[1], "\t", t[2], "\t", t[3], "\t", 0, "\t", 0)
 		else
+			a = bed[t[1]]
 			st0, en0 = parse(Int, t[2]), parse(Int, t[3])
-			a = Klib.it_overlap(bed[t[1]], st0, en0)
+			b = Klib.it_overlap(a, st0, en0)
 			cov_st, cov_en, cov = 0, 0, 0
-			for i = 1:length(a)
-				st1 = max(a[i].st, st0)
-				en1 = min(a[i].en, en0)
+			for i = 1:length(b)
+				st1 = max(b[i].st, st0)
+				en1 = min(b[i].en, en0)
 				if st1 > cov_en
 					cov += cov_en - cov_st
 					cov_st, cov_en = st1, en1
@@ -38,7 +39,7 @@ function main(args)
 				end
 			end
 			cov += cov_en - cov_st
-			println(t[1], "\t", t[2], "\t", t[3], "\t", length(a), "\t", cov)
+			println(t[1], "\t", t[2], "\t", t[3], "\t", length(b), "\t", cov)
 		end
 	end
 end
