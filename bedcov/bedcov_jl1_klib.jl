@@ -19,6 +19,7 @@ function main(args)
 	for ctg in keys(bed)
 		Klib.it_index!(bed[ctg])
 	end
+	b = Vector{Klib.Interval{Int}}()
 	for line in eachline(args[2])
 		t = split(line, "\t")
 		if get(bed, t[1], nothing) == nothing
@@ -26,7 +27,7 @@ function main(args)
 		else
 			a = bed[t[1]]
 			st0, en0 = parse(Int, t[2]), parse(Int, t[3])
-			b = Klib.it_overlap(a, st0, en0)
+			Klib.it_overlap!(a, st0, en0, b)
 			cov_st, cov_en, cov = 0, 0, 0
 			for i = 1:length(b)
 				st1 = max(b[i].st, st0)

@@ -1,7 +1,7 @@
 module Klib
 
 export getopt, GzFile, close, Bufio, readbyte, readuntil!, FastxReader, FastxRecord
-export Interval, it_index, it_overlap
+export Interval, it_index, it_overlap!
 
 #
 # Getopt iterator
@@ -383,9 +383,10 @@ function it_index!(a::Vector{Interval{T}}) where T<:Number
 	end
 end
 
-function it_overlap(a::Vector{Interval{T}}, st::Int, en::Int) where T<:Number
-	b = Vector{Interval{T}}()
+function it_overlap!(a::Vector{Interval{T}}, st::Int, en::Int, b::Vector{Interval{T}}) where T<:Number
+	resize!(b, 0)
 	stack = Vector{Tuple{Int,Int,Int}}()
+	sizehint!(stack, 128)
 	h = 0
 	while (1<<h <= length(a)) h += 1 end
 	h -= 1
@@ -412,7 +413,6 @@ function it_overlap(a::Vector{Interval{T}}, st::Int, en::Int) where T<:Number
 			push!(stack, (x + (1<<(h-1)), h - 1, 0))
 		end
 	end
-	return b
 end
 
 end # module Klib

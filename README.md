@@ -18,7 +18,7 @@
 |:-------|:---------|:--------|--------------------:|---------------------:|--------------------:|---------------------:|
 |[bedcov\_c1\_cgr.c](bedcov/bedcov_c1_cgr.c)          |C         |[cgranges.h](lib/cgranges.h)|  5.5|  138.4 | 10.7|  19.1 |
 |[bedcov\_nim1\_klib.nim](bedcov/bedcov_nim1_klib.nim)|Nim       |[klib.nim](lib/klib.nim)    | 16.9|  497.7 | 25.7|  69.1 |
-|[bedcov\_jl1\_klib.jl](bedcov/bedcov_jl1_klib.jl)    |Julia     |[Klib.jl](lib/Klib.jl)      | 48.7| 6769.9 | 77.1| 290.4 |
+|[bedcov\_jl1\_klib.jl](bedcov/bedcov_jl1_klib.jl)    |Julia     |[Klib.jl](lib/Klib.jl)      | 45.2| 3657.7 | 77.4| 288.8 |
 |[bedcov\_js1\_k8.js](bedcov/bedcov_js1_k8.jl)        |Javascript|                            | 75.4| 2219.9 | 87.2| 316.8 |
 |[bedcov\_lua1.lua](bedcov/bedcov_lua1.lua)           |LuaJIT    |                            |174.1| 2668.0 |217.6| 364.6 |
 
