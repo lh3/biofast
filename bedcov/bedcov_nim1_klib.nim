@@ -3,24 +3,24 @@ import tables
 import strutils
 
 type
-  IntervalList[T] = seq[Interval[T]]
+  IntervalList32 = seq[Interval[int32,int32]]
 
-proc loadBed(fn: string): TableRef[string, IntervalList[int]] =
-  result = newTable[string, IntervalList[int]]()
+proc loadBed(fn: string): TableRef[string, IntervalList32] =
+  result = newTable[string, IntervalList32]()
   var
     f = xopen[GzFile](fn)
     line: string
-    lineno: int = 0
+    lineno: int32 = 0
   while f.readLine(line):
     var t = line.split('\t')
     if not result.hasKey(t[0]): result[t[0]] = @[]
-    result[t[0]].add((parseInt(t[1]), parseInt(t[2]), lineno, 0))
+    result[t[0]].add((int32(parseInt(t[1])), int32(parseInt(t[2])), lineno, int32(0)))
     lineno += 1
   for ctg in result.keys():
     result[ctg].index()
   f.close()
 
-proc bedCov(bed: TableRef[string, IntervalList[int]], fn: string) =
+proc bedCov(bed: TableRef[string, IntervalList32], fn: string) =
   var
     f = xopen[GzFile](fn)
     line: string
@@ -30,8 +30,8 @@ proc bedCov(bed: TableRef[string, IntervalList[int]], fn: string) =
       stdout.writeLine([t[0], t[1], t[2], "0", "0"].join("\t"))
     else:
       var a = bed[t[0]].addr
-      let st0 = parseInt(t[1])
-      let en0 = parseInt(t[2])
+      let st0 = int32(parseInt(t[1]))
+      let en0 = int32(parseInt(t[2]))
       var cov_st, cov_en, cov, cnt: int
       for x in a[].overlap(st0, en0):
         cnt += 1

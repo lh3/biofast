@@ -272,22 +272,23 @@ proc readFastx*[T](f: var Bufio[T], r: var FastxRecord): bool {.discardable.} =
 #############
 
 type
-  Interval*[T] = tuple[st, en: int, data: T, max: int]
+  Interval*[S,T] = tuple[st, en: S, data: T, max: S]
 
-proc sort*[T](a: var seq[Interval[T]]) =
-  a.sort do (x, y: Interval[T]) -> int:
+proc sort*[S,T](a: var seq[Interval[S,T]]) =
+  a.sort do (x, y: Interval[S,T]) -> int:
     if x.st < y.st: -1
     elif x.st > y.st: 1
     else: 0
 
-proc index*[T](a: var seq[Interval[T]]): int {.discardable.} =
+proc index*[S,T](a: var seq[Interval[S,T]]): int {.discardable.} =
   if a.len == 0: return 0
   var is_srt = true
   for i in 1..<a.len:
     if a[i-1].st > a[i].st:
       is_srt = false; break
   if not is_srt: a.sort()
-  var last_i, last: int
+  var last_i: int
+  var last: S
   for i in countup(0, a.len-1, 2): # leaves (i.e. at level 0)
     (last_i, last, a[i].max) = (i, a[i].en, a[i].en)
   var k = 1
@@ -309,7 +310,7 @@ proc index*[T](a: var seq[Interval[T]]): int {.discardable.} =
     k += 1
   return k - 1
 
-iterator overlap*[T](a: seq[Interval[T]], st: int, en: int): Interval[T] {.noSideEffect.} =
+iterator overlap*[S,T](a: seq[Interval[S,T]], st: S, en: S): Interval[S,T] {.noSideEffect.} =
   var h: int = 0
   while 1 shl h <= a.len: h += 1
   h -= 1 # h is the height of the tree
