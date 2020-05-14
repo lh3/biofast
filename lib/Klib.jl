@@ -355,16 +355,17 @@ end
 # Interval overlap query
 #
 
-mutable struct Interval{T}
+mutable struct Interval{S,T}
 	data::T
-	st::Int
-	en::Int
-	max::Int
+	st::S
+	en::S
+	max::S
 end
 
-function it_index!(a::Vector{Interval{T}}) where T<:Number
+function it_index!(a::Vector{Interval{S,T}}) where {S,T}
 	sort!(a, by = x -> x.st)
-	last, last_i = 0, 1
+	last_i = 1
+	last::S = 0
 	@inbounds for i = 1:2:length(a)
 		a[i].max, last, last_i = a[i].en, a[i].en, i;
 	end
@@ -383,7 +384,7 @@ function it_index!(a::Vector{Interval{T}}) where T<:Number
 	end
 end
 
-function it_overlap!(a::Vector{Interval{T}}, st::Int, en::Int, b::Vector{Interval{T}}) where T<:Number
+function it_overlap!(a::Vector{Interval{S,T}}, st::S, en::S, b::Vector{Interval{S,T}}) where {S,T}
 	resize!(b, 0)
 	stack = Vector{Tuple{Int,Int,Int}}()
 	sizehint!(stack, 128)
