@@ -7,7 +7,7 @@ if ARGV.size < 1
 	exit(0)
 end
 
-fp = Bufio(GzipReader).new(ARGV[0])
+fp = GzipReader.new(ARGV[0])
 n, slen, qlen = 0, 0, 0
 each_fastx(fp) do |hdr, seq, qual|
 	n += 1

@@ -7,7 +7,8 @@ lib LibZ
 	fun gzread(fp : Void*, buf : Void*, len : LibC::UInt) : LibC::Int
 end
 
-class GzipReader
+class GzipReader < IO
+	include IO::Buffered
 	def initialize(fn)
 		@fp = LibZ.gzopen(fn, "r")
 		raise "GzipReader: failed to open the file" if @fp == Pointer(Void).null
@@ -16,38 +17,18 @@ class GzipReader
 		ret = LibZ.gzclose(@fp)
 		raise "GzipReader: failed to close the file" if ret < 0
 	end
-	def read(buf : Bytes)
+	def unbuffered_read(buf : Bytes)
 		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
 		raise "GzipReader: failed to read data" if ret < 0
 		return ret
 	end
-end
-
-class Bufio(F) < IO
-	def initialize(fn, buf_sz = 0x10000)
-		@fp = F.new(fn)
-		@buf = Bytes.new(buf_sz)
-		@st, @en, @eof = 0, 0, false
+	def unbuffered_write(buf : Bytes) : Nil
 	end
-	def read(buf : Bytes)
-		return 0 if @eof && @st >= @en
-		rest, off = buf.size, 0
-		while rest > @en - @st
-			if @en > @st
-				l = @en - @st
-				Intrinsics.memcpy(buf + off, @buf + @st, l, false)
-				rest -= l
-				off += l
-			end
-			@st, @en = 0, @fp.read(@buf)
-			@eof = true if @en < @buf.size
-			return off if @en == 0
-		end
-		Intrinsics.memcpy(buf + off, @buf + @st, rest, false) if rest > 0
-		@st += rest
-		return off + rest
+	def unbuffered_flush
 	end
-	def write(buf : Bytes) : Nil # not supported yet
+	def unbuffered_close
+	end
+	def unbuffered_rewind
 	end
 end
 
