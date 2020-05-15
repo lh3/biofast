@@ -355,7 +355,7 @@ end
 # Interval overlap query
 #
 
-mutable struct Interval{S,T}
+struct Interval{S,T}
 	data::T
 	st::S
 	en::S
@@ -367,16 +367,18 @@ function it_index!(a::Vector{Interval{S,T}}) where {S,T}
 	last_i = 1
 	last::S = 0
 	@inbounds for i = 1:2:length(a)
-		a[i].max, last, last_i = a[i].en, a[i].en, i;
+		last, last_i = a[i].en, i;
+		a[i] = Interval{S,T}(a[i].data, a[i].st, a[i].en, a[i].en)
 	end
 	k::Int = 1
 	@inbounds while 1<<k <= length(a)
 		i0, step = (1<<k), 1<<(k+1)
 		for i = i0:step:length(a)
 			x = 1<<(k-1)
-			a[i].max = max(a[i].en, a[i-x].max)
+			max_end = max(a[i].en, a[i-x].max)
 			e = if (i + x <= length(a)) a[i+x].max else last end
-			a[i].max = max(a[i].max, e)
+			max_end = max(max_end, e)
+			a[i] = Interval{S,T}(a[i].data, a[i].st, a[i].en, max_end)
 		end
 		last_i = if ((last_i>>k&1) != 0) last_i + (1<<(k-1)) else last_i - (1<<(k-1)) end
 		if (last_i <= length(a)) last = max(last, a[last_i].max) end

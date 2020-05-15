@@ -65,7 +65,7 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 |[bedcov\_c1\_cgr.c](bedcov/bedcov_c1_cgr.c)          |C         |[cgranges.h](lib/cgranges.h)|  5.5|  138.4 | 10.7|  19.1 |
 |[bedcov\_cr1\_klib.cr](bedcov/bedcov_cr1_klib.cr)    |Crystal   |[klib.cr](lib/klib.cr)      | 10.1|  337.0 | 18.1|  43.9 |
 |[bedcov\_nim1\_klib.nim](bedcov/bedcov_nim1_klib.nim)|Nim       |[klib.nim](lib/klib.nim)    | 18.7|  255.8 | 28.2|  34.4 |
-|[bedcov\_jl1\_klib.jl](bedcov/bedcov_jl1_klib.jl)    |Julia     |[Klib.jl](lib/Klib.jl)      | 43.6| 3111.8 | 80.4| 285.5 |
+|[bedcov\_jl1\_klib.jl](bedcov/bedcov_jl1_klib.jl)    |Julia     |[Klib.jl](lib/Klib.jl)      | 25.9|  428.1 | 63.5| 257.0 |
 |[bedcov\_js1\_cgr.js](bedcov/bedcov_js1_cgr.jl)      |Javascript|                            | 75.4| 2219.9 | 87.2| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov/bedcov_lua1_cgr.lua)  |LuaJIT    |                            |174.1| 2668.0 |217.6| 364.6 |
 
