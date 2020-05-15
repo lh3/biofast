@@ -5,6 +5,7 @@ lib LibZ
 	fun gzopen(fn : LibC::Char*, mode : LibC::Char*) : Void*
 	fun gzclose(fp : Void*) : LibC::Int
 	fun gzread(fp : Void*, buf : Void*, len : LibC::UInt) : LibC::Int
+	fun gzrewind(fp : Void*) : LibC::Int
 end
 
 class GzipReader < IO
@@ -18,6 +19,7 @@ class GzipReader < IO
 		self.unbuffered_close
 	end
 	def unbuffered_read(buf : Bytes)
+		return 0 if @closed
 		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
 		raise "GzipReader: failed to read data" if ret < 0
 		return ret
@@ -25,14 +27,15 @@ class GzipReader < IO
 	def unbuffered_close
 		return if @closed
 		@closed = true
-		ret = LibZ.gzclose(@fp)
-		raise "GzipReader: failed to close the file" if ret < 0
+		LibZ.gzclose(@fp) >= 0 || raise "GzipReader: failed to close the file"
+	end
+	def unbuffered_rewind
+		return if @closed
+		LibZ.gzrewind(@fp) >= 0 || raise "GzipReader: failed to rewind"
 	end
 	def unbuffered_write(buf : Bytes) : Nil
 	end
 	def unbuffered_flush
-	end
-	def unbuffered_rewind
 	end
 end
 
