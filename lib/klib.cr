@@ -12,21 +12,25 @@ class GzipReader < IO
 	def initialize(fn)
 		@fp = LibZ.gzopen(fn, "r")
 		raise "GzipReader: failed to open the file" if @fp == Pointer(Void).null
+		@closed = false
 	end
 	def finalize
-		ret = LibZ.gzclose(@fp)
-		raise "GzipReader: failed to close the file" if ret < 0
+		self.unbuffered_close
 	end
 	def unbuffered_read(buf : Bytes)
 		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
 		raise "GzipReader: failed to read data" if ret < 0
 		return ret
 	end
+	def unbuffered_close
+		return if @closed
+		@closed = true
+		ret = LibZ.gzclose(@fp)
+		raise "GzipReader: failed to close the file" if ret < 0
+	end
 	def unbuffered_write(buf : Bytes) : Nil
 	end
 	def unbuffered_flush
-	end
-	def unbuffered_close
 	end
 	def unbuffered_rewind
 	end
