@@ -34,8 +34,8 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 |[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)|Nim       |[klib.nim](lib/klib.nim) | 12.3|  4.0|kseq.h port|
 |[fqcnt\_py6x\_pyfx.py](fqcnt/fqcnt_py6x_pyfx.py)  |Python    |[PyFastx][pyfx]          | 15.8|  7.3|kseq.h binding|
 |[fqcnt\_py3x\_mappy.py](fqcnt/fqcnt_py3x_mappy.py)|Python    |[mappy][mappy]           | 16.6|  8.7|kseq.h binding|
+|[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)    |Crystal   |[klib.cr](lib/klib.cr)   | 17.3|  8.7|kseq.h port|
 |[fqcnt\_js1\_k8.js](fqcnt/fqcnt_js1_k8.js)        |Javascript|                         | 17.5|  9.4|kseq.h port|
-|[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)    |Crystal   |[klib.cr](lib/klib.cr)   | 18.0|  9.6|kseq.h port|
 |[fqcnt\_jl2x\_fastx.jl](fqcnt/fqcnt_jl2x_fastx.jl)|Julia     |[Fastx.jl][fx.jl]        | 19.5|  2.6|4-line only; no startup|
 |[fqcnt\_lua2\_4l.lua](fqcnt\_lua2\_4l.lua)        |LuaJIT    |                         | 22.8| 10.4|4-line only|
 |[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)    |Julia     |[Klib.jl](lib/Klib.jl)   | 23.7|  7.1|kseq.h port|

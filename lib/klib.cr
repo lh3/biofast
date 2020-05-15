@@ -43,7 +43,7 @@ def each_fastx(io : IO)
 			break if hdr == nil
 		end
 		hdr = hdr.not_nil!
-		hdr = hdr[1, (hdr.index(/\s/, 1) || hdr.size) - 1]
+		hdr = hdr[1, (hdr.index(' ', 1) || hdr.index('\t', 1) || hdr.size) - 1]
 		seq.clear()
 		while (l = io.gets()) != nil
 			l = l.not_nil!
