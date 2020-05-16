@@ -123,18 +123,18 @@ module IITree(SType, DType)
 				i1 = i0 + (1<<(h+1)) - 1
 				i1 = a.size if i1 >= a.size
 				i = i0
-				while i < i1 && a[i].st < en
-					yield a[i] if st < a[i].en
+				while i < i1 && a.unsafe_fetch(i).st < en
+					yield a.unsafe_fetch(i) if st < a.unsafe_fetch(i).en
 					i += 1
 				end
 			elsif w == 0
 				stack[n], n = { x, h, 1 }, n + 1
 				y = x - (1<<(h-1))
-				if y >= a.size || a[y].max > st
+				if y >= a.size || a.unsafe_fetch(y).max > st
 					stack[n], n = { y, h - 1, 0 }, n + 1
 				end
-			elsif x < a.size && a[x].st < en
-				yield a[x] if st < a[x].en
+			elsif x < a.size && a.unsafe_fetch(x).st < en
+				yield a.unsafe_fetch(x) if st < a.unsafe_fetch(x).en
 				stack[n], n = { x + (1<<(h-1)), h - 1, 0 }, n + 1
 			end
 		end
