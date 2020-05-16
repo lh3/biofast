@@ -45,8 +45,13 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)      |Python    |                         | 42.6| 19.4|partial kseq.h port|
 |[fqcnt\_py5x\_bp.py](fqcnt/fqcnt_py5x_bp.py)      |Python    |[BioPython][bp]          |135.8|107.1|SeqIO.parse|
 
-Note that Julia takes ~11 seconds to compile the Fastx.jl implementation. The
-numbers in the table exclude this startup time.
+* Nim, Julia and Javascript use an algorithm very similar to
+  [kseq.h](lib/kseq.h). Crystal, LuaJIT and the second Python script (py2) are
+  somewhat similar but they use the languages' builtin line readers instead. All
+  these implementations seamlessly work with FASTA and multi-line FASTQ files.
+
+* Julia takes ~11 seconds to compile the Fastx.jl implementation. The numbers
+  in the table exclude this startup time.
 
 ### <a name="bedcov"></a>Computing the depth and breadth of coverage from BED files
 
@@ -72,8 +77,15 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 |[bedcov\_js1\_cgr.js](bedcov/bedcov_js1_cgr.jl)      |Javascript|                            | 75.4| 2219.9 | 87.2| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov/bedcov_lua1_cgr.lua)  |LuaJIT    |                            |174.1| 2668.0 |217.6| 364.6 |
 
-Javascript and LuaJIT are slower and use more memory because they create a
-separate object for each loaded interval.
+* Crystal, Nim and Julia use a long contiguous memory block for loaded
+  intervals on each chromosome. Javascript and LuaJIT instead use a list of
+  separate objects.
+
+* Bounds check is completely disabled for Nim and partially disabled for
+  Crystal. Bounds check might be partially disabled in Julia, too. Not sure.
+
+* For "g2r", sorting takes significant time. C uses a radix sort. Other
+  languages rely on their standard libraries.
 
 [dl]: https://github.com/lh3/biofast/releases/tag/biofast-data-v1
 [bp]: https://biopython.org/
