@@ -5,7 +5,6 @@ lib LibZ
 	fun gzopen(fn : LibC::Char*, mode : LibC::Char*) : Void*
 	fun gzclose(fp : Void*) : LibC::Int
 	fun gzread(fp : Void*, buf : Void*, len : LibC::UInt) : LibC::Int
-	fun gzrewind(fp : Void*) : LibC::Int
 end
 
 class ByteString
@@ -15,7 +14,6 @@ class ByteString
 		@size, @cap = 0, 0
 		self.resize(sz) if sz > 0
 	end
-	@[AlwaysInline]
 	def clear
 		@size = 0
 	end
@@ -41,24 +39,21 @@ class ByteString
 		x |= x >> 16
 		return x + 1
 	end
-	@[AlwaysInline]
 	def resize(sz : Int32)
 		@size = sz
 		return if @size <= @cap
 		@cap = roundup32(@size)
 		@ptr = @ptr.realloc(@cap)
 	end
-	@[AlwaysInline]
+	def push(c : UInt8)
+		resize(@size + 1)
+		@ptr[@size - 1] = c
+	end
 	def append(len : Int32, ptr : Pointer(UInt8))
 		return if len <= 0
 		old_size = @size
 		resize(@size + len)
 		Intrinsics.memcpy(@ptr + old_size, ptr, len, false)
-	end
-	@[AlwaysInline]
-	def push(c : UInt8)
-		resize(@size + 1)
-		@ptr[@size - 1] = c
 	end
 	def unsafe_find_u8(c : UInt8, st : Int, en : Int)
 		r = en
@@ -93,7 +88,7 @@ class ByteString
 	def to_s
 		String.new(Slice.new(@ptr, @size))
 	end
-end
+end # class ByteString
 
 abstract class BufferedReader
 	@buf = ByteString.new(0x10000)
@@ -158,6 +153,28 @@ abstract class BufferedReader
 		buf.resize(buf.size - 1) if delim == -1 && buf.size > 1 && buf.unsafe_fetch(buf.size - 1) == 0xd_u8
 		return buf.size
 	end
+end # class BufferedReader
+
+class GzipReader < BufferedReader
+	def initialize(fn)
+		@fp = LibZ.gzopen(fn, "r")
+		raise "GzipReader: failed to open the file" if @fp == Pointer(Void).null
+		@closed = false
+	end
+	def finalize
+		self.close
+	end
+	def close
+		return if @closed
+		@closed = true
+		LibZ.gzclose(@fp) >= 0 || raise "GzipReader: failed to close the file"
+	end
+	def unbuffered_read(buf : Bytes)
+		return 0 if @closed
+		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
+		raise "GzipReader: failed to read data" if ret < 0
+		return ret
+	end
 end
 
 class FastxReader(F)
@@ -172,7 +189,7 @@ class FastxReader(F)
 		@tmp = ByteString.new
 	end
 
-	def read_fastx
+	def read
 		if @last_char == 0
 			while (c = @fp.read_byte) >= 0 && c != 62 && c != 64
 			end
@@ -201,92 +218,6 @@ class FastxReader(F)
 		@last_char = 0
 		return -2 if @seq.size != @qual.size
 		return @seq.size
-	end
-end
-
-class GzipReader2 < BufferedReader
-	def initialize(fn)
-		@fp = LibZ.gzopen(fn, "r")
-		raise "GzipReader: failed to open the file" if @fp == Pointer(Void).null
-		@closed = false
-	end
-	def finalize
-		self.close
-	end
-	def close
-		return if @closed
-		@closed = true
-		LibZ.gzclose(@fp) >= 0 || raise "GzipReader: failed to close the file"
-	end
-	def unbuffered_read(buf : Bytes)
-		return 0 if @closed
-		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
-		raise "GzipReader: failed to read data" if ret < 0
-		return ret
-	end
-end
-
-class GzipReader < IO
-	include IO::Buffered
-	def initialize(fn)
-		@fp = LibZ.gzopen(fn, "r")
-		raise "GzipReader: failed to open the file" if @fp == Pointer(Void).null
-		@closed = false
-	end
-	def finalize
-		self.unbuffered_close
-	end
-	def unbuffered_read(buf : Bytes)
-		return 0 if @closed
-		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
-		raise "GzipReader: failed to read data" if ret < 0
-		return ret
-	end
-	def unbuffered_close
-		return if @closed
-		@closed = true
-		LibZ.gzclose(@fp) >= 0 || raise "GzipReader: failed to close the file"
-	end
-	def unbuffered_rewind
-		return if @closed
-		LibZ.gzrewind(@fp) >= 0 || raise "GzipReader: failed to rewind"
-	end
-	def unbuffered_write(buf : Bytes) : Nil
-	end
-	def unbuffered_flush
-	end
-end
-
-def each_fastx(io : IO)
-	hdr, seq, qual = nil, IO::Memory.new(), IO::Memory.new()
-	while true
-		if hdr == nil
-			while (hdr = io.gets()) != nil
-				hdr = hdr.not_nil!
-				break if hdr[0] == '@' || hdr[0] == '>'
-			end
-			break if hdr == nil
-		end
-		hdr = hdr.not_nil!
-		hdr = hdr[1, (hdr.index(' ', 1) || hdr.index('\t', 1) || hdr.size) - 1]
-		seq.clear()
-		while (l = io.gets()) != nil
-			l = l.not_nil!
-			break if l[0] == '@' || l[0] == '>' || l[0] == '+'
-			seq << l
-		end
-		if l == nil || l.not_nil![0] != '+'
-			yield hdr, seq.to_s, nil
-			hdr = l
-		else
-			qual.clear()
-			while qual.size < seq.size && (l = io.gets()) != nil
-				qual << l
-			end
-			raise "each_fastx: seq and qual are of differen lengths" if seq.size != qual.size
-			yield hdr, seq.to_s, qual.to_s
-			hdr = nil
-		end
 	end
 end
 
