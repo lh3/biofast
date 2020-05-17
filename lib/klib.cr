@@ -1,10 +1,73 @@
 module Klib
 
-@[Link("z")]
-lib KlibZ
-	fun gzopen(fn : LibC::Char*, mode : LibC::Char*) : Void*
-	fun gzclose(fp : Void*) : LibC::Int
-	fun gzread(fp : Void*, buf : Void*, len : LibC::UInt) : LibC::Int
+def getopt(argv : Array(String), ostr : String, longopts)
+	return if argv.size == 0
+	pos, cur = 0, 0
+	while cur < argv.size
+		lopt, opt, arg = "", '?', ""
+		while cur < argv.size
+			cur_len = argv[cur].size
+			if argv[cur][0] == '-' && cur_len > 1
+				cur = argv.size if cur_len == 2 && argv[cur][1] == '-'
+				break
+			else
+				cur += 1
+			end
+		end
+		break if cur == argv.size
+		a, a_len = argv[cur], argv[cur].size
+		if a[0] == '-' && a[1] == '-' # a long option
+			pos = -1
+			c, k, tmp = 0, -1, ""
+			pos_eq = a.index('=', 2) || -1
+			if pos_eq > 0
+				o = a[2 ... pos_eq]
+				arg = a[(pos_eq + 1 ..)]
+			else
+				o = a[(2 ..)]
+			end
+			longopts.each_index do |i|
+				y = longopts[i]
+				y = y[0 ... y.size - 1] if y[y.size - 1] == '=' # slow
+				if o.size <= y.size && o == y[0 ... o.size] # prefix match
+					k, tmp = i, y
+					c += 1 # c is the number of matches
+					if o == y # exact match
+						c = 1
+						break
+					end
+				end
+			end
+			if c == 1 # find a unique match
+				lopt = tmp
+				arg = argv.delete_at(cur + 1) if pos_eq < 0 && longopts[k][longopts[k].size-1] == '=' && cur + 1 < argv.size
+			end
+		else # a short optoin
+			pos = 1 if pos == 0
+			opt = a[pos]
+			pos += 1
+			k = ostr.index(opt) || -1
+			if k < 0
+				opt = '?'
+			elsif k + 1 < ostr.size && ostr[k+1] == ':' # requiring an argument
+				if pos >= a.size
+					arg = argv.delete_at(cur + 1) if cur + 1 < argv.size
+				else
+					arg = a[(pos ..)]
+				end
+				pos = -1
+			end
+		end
+		if pos < 0 || pos >= argv[cur].size
+			argv.delete_at(cur)
+			pos = 0
+		end
+		if lopt != ""
+			yield "--#{lopt}", arg
+		else
+			yield "-#{opt}", arg
+		end
+	end
 end
 
 class ByteString
@@ -145,6 +208,13 @@ abstract class BufferedReader
 		return buf.size
 	end
 end # class BufferedReader
+
+@[Link("z")]
+lib KlibZ
+	fun gzopen(fn : LibC::Char*, mode : LibC::Char*) : Void*
+	fun gzclose(fp : Void*) : LibC::Int
+	fun gzread(fp : Void*, buf : Void*, len : LibC::UInt) : LibC::Int
+end
 
 class GzipReader < BufferedReader
 	def initialize(fn)
