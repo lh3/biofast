@@ -10,10 +10,11 @@ end
 fp = GzipReader.new(ARGV[0])
 fx = FastxReader.new(fp)
 n, slen, qlen = 0, 0, 0
-while fx.read >= 0
+while (r = fx.read) >= 0
 	n += 1
 	slen += fx.seq.size
 	qlen += fx.qual.size
 end
 puts "#{n}\t#{slen}\t#{qlen}"
+raise "ERROR: malformatted FASTX" if r != -1
 fp.close
