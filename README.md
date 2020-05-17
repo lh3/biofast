@@ -30,7 +30,7 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 
 |Program | Language | Library | t<sub>gzip</sub> (s) | t<sub>plain</sub> (s) | Comments |
 |:-------|:---------|:--------|---------------------:|----------------------:|:---------|
-|[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)    |Crystal   |[klib.cr](lib/klib.cr)   | 10.3|  2.2|kseq.h port|
+|[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)    |Crystal   |[klib.cr](lib/klib.cr)   |  9.8|  1.6|kseq.h port|
 |[fqcnt\_c1\_kseq.c](fqcnt/fqcnt_c1_kseq.c)        |C         |[kseq.h](lib/kseq.h)     | 10.4|  2.0||
 |[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)|Nim       |[klib.nim](lib/klib.nim) | 12.3|  4.0|kseq.h port|
 |[fqcnt\_py6x\_pyfx.py](fqcnt/fqcnt_py6x_pyfx.py)  |Python    |[PyFastx][pyfx]          | 15.8|  7.3|kseq.h binding|

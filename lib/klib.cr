@@ -1,7 +1,7 @@
 module Klib
 
 @[Link("z")]
-lib LibZ
+lib KlibZ
 	fun gzopen(fn : LibC::Char*, mode : LibC::Char*) : Void*
 	fun gzclose(fp : Void*) : LibC::Int
 	fun gzread(fp : Void*, buf : Void*, len : LibC::UInt) : LibC::Int
@@ -13,9 +13,6 @@ class ByteString
 		@ptr = Pointer(UInt8).new(0)
 		@size, @cap = 0, 0
 		self.resize(sz) if sz > 0
-	end
-	def clear
-		@size = 0
 	end
 	@[AlwaysInline]
 	def unsafe_fetch(i : Int32)
@@ -55,22 +52,16 @@ class ByteString
 		resize(@size + len)
 		Intrinsics.memcpy(@ptr + old_size, ptr, len, false)
 	end
-	def unsafe_find_u8(c : UInt8, st : Int, en : Int)
-		r = en
-		(st ... en).each do |i|
-			if unsafe_fetch(i) == c
-				r = i
-				break
-			end
-		end
-		return r
+	def unsafe_find_chr(c : Int32, st : Int, en : Int)
+		p = LibC.memchr(@ptr + st, c, en - st)
+		return p == Pointer(Void).null ? en : (p.address - @ptr.address).to_i32
 	end
 	def unsafe_find(c : Int32, st : Int, en : Int)
 		r = en
 		if c == -1
-			r = unsafe_find_u8(0xa_u8, st, en)
+			r = unsafe_find_chr(0xa, st, en)
 		elsif c >= 0
-			r = unsafe_find_u8(c.to_u8, st, en)
+			r = unsafe_find_chr(c, st, en)
 		elsif c == -2
 			(st ... en).each do |i|
 				x = unsafe_fetch(i)
@@ -157,7 +148,7 @@ end # class BufferedReader
 
 class GzipReader < BufferedReader
 	def initialize(fn)
-		@fp = LibZ.gzopen(fn, "r")
+		@fp = KlibZ.gzopen(fn, "r")
 		raise "GzipReader: failed to open the file" if @fp == Pointer(Void).null
 		@closed = false
 	end
@@ -167,11 +158,11 @@ class GzipReader < BufferedReader
 	def close
 		return if @closed
 		@closed = true
-		LibZ.gzclose(@fp) >= 0 || raise "GzipReader: failed to close the file"
+		KlibZ.gzclose(@fp) >= 0 || raise "GzipReader: failed to close the file"
 	end
 	def unbuffered_read(buf : Bytes)
 		return 0 if @closed
-		ret = LibZ.gzread(@fp, buf, buf.size.to_u32)
+		ret = KlibZ.gzread(@fp, buf, buf.size.to_u32)
 		raise "GzipReader: failed to read data" if ret < 0
 		return ret
 	end
@@ -196,9 +187,9 @@ class FastxReader(F)
 			return c if c < 0
 			@last_char = c
 		end
-		@seq.clear
-		@qual.clear
-		@comment.clear
+		@seq.resize(0)
+		@qual.resize(0)
+		@comment.resize(0)
 		r = @fp.read_until(@name, -2, 0, true)
 		return r if r < 0
 		@fp.read_until(@comment, -1) if @name.unsafe_fetch(@name.size - 1) != 0xa_u8
