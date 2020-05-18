@@ -3,7 +3,7 @@
 Biofast is a small benchmark for evaluating the performance of programming
 languages and implementations on a few common tasks in the field of
 Bioinformatics. It currently includes two benchmarks: [FASTQ parsing](#fqcnt)
-and [interval query](#bedcov).
+and [interval query](#bedcov). Please see also the companion [blog post][blog].
 
 ## Results
 
@@ -94,3 +94,4 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 [pyfx]: https://github.com/lmdu/pyfastx
 [cgr]: https://github.com/lh3/cgranges
 [bedcov]: https://bedtools.readthedocs.io/en/latest/content/tools/coverage.html
+[blog]: http://lh3.github.io/2020/05/17/fast-high-level-programming-languages
