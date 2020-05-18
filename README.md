@@ -56,7 +56,8 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 ### <a name="bedcov"></a>Computing the depth and breadth of coverage from BED files
 
 In this benchmark, we load one BED file into memory. We stream another BED file
-and compute coverage of each interval using the [cgranges algorithm][cgr]. The
+and compute coverage of each interval using the [cgranges algorithm][cgr] (see
+the [C++ header][cppiitree] for algorithm details). The
 output all programs should be identical "[bedtools coverage][bedcov]". In the
 table below, "t" stands for CPU time in seconds and "M" for peak memory in
 mega-bytes. Subscripts "g2r" and "r2g" correspond to the following two command
@@ -95,3 +96,4 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 [cgr]: https://github.com/lh3/cgranges
 [bedcov]: https://bedtools.readthedocs.io/en/latest/content/tools/coverage.html
 [blog]: http://lh3.github.io/2020/05/17/fast-high-level-programming-languages
+[cppiitree]: https://github.com/lh3/cgranges/blob/master/cpp/IITree.h
