@@ -113,7 +113,7 @@ class ByteString
 		return if len <= 0
 		old_size = @size
 		resize(@size + len)
-		Intrinsics.memcpy(@ptr + old_size, ptr, len, false)
+		(@ptr + old_size).copy_from(ptr, len)
 	end
 	def unsafe_find_chr(c : Int32, st : Int, en : Int)
 		p = LibC.memchr(@ptr + st, c, en - st)
