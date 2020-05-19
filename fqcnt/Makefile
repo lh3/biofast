@@ -1,6 +1,6 @@
 CFLAGS=-g -Wall -O2
 LIBS=-lz
-PROG=fqcnt_c1_kseq fqcnt_nim1_klib fqcnt_go1
+PROG=fqcnt_c1_kseq fqcnt_nim1_klib fqcnt_go1 fqcnt_rs1
 NIM=nim
 GO=go
 CARGO=cargo
@@ -21,7 +21,7 @@ fqcnt_go1:fqcnt_go1.go
 
 .PHONY: fqcnt_rs1
 fqcnt_rs1:
-	$(CARGO) install --path $(PROJECT_ROOT) --force --bin fqcnt_rustbio
+	$(CARGO) install --path $(PROJECT_ROOT) --force --bin fqcnt_rustbio --root .
 
 .PHONY: rust
 rust: fqcnt_rs1
