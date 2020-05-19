@@ -25,3 +25,8 @@
 
 * External libraries: biopython-1.76, pyfastx-0.6.10, mappy-2.17 and
   Fastx.jl-1.0.0.
+
+[bp]: https://biopython.org/
+[fx.jl]: https://github.com/BioJulia/FASTX.jl
+[mappy]: https://github.com/lh3/minimap2/tree/master/python
+[pyfx]: https://github.com/lmdu/pyfastx
