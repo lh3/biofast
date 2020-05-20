@@ -6,4 +6,4 @@
 |[bedcov\_jl1\_klib.jl](bedcov_jl1_klib.jl)    |Julia     |[Klib.jl](../lib/Klib.jl)      | 25.9|  428.1 | 63.0| 257.0 |
 |[bedcov\_go1.go](bedcov_go1.go)               |Go        |                               | 34.0|  318.9 | 21.8|  47.3 |
 |[bedcov\_js1\_cgr.js](bedcov_js1_cgr.jl)      |Javascript|                               | 76.4| 2219.9 | 80.0| 316.8 |
-|[bedcov\_lua1\_cgr.lua](bedcov_lua1_cgr.lua)  |LuaJIT    |                               |174.1| 2668.0 |217.6| 364.6 |
+|[bedcov\_lua1\_cgr.lua](bedcov_lua1_cgr.lua)  |LuaJIT    |                               |174.1| 2668.0 |218.9| 364.6 |
