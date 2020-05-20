@@ -12,7 +12,7 @@ fqcnt_c1_kseq:fqcnt_c1_kseq.c ../lib/kseq.h
 	$(CC) $(CFLAGS) -I../lib -o $@ $< $(LIBS)
 
 fqcnt_nim1_klib:fqcnt_nim1_klib.nim ../lib/klib.nim
-	$(NIM) c -d:release -d:nimEmulateOverflowChecks -p:../lib -o:$@ $<
+	$(NIM) c -d:release -d:nimEmulateOverflowChecks --bound_checks:off -p:../lib -o:$@ $<
 
 fqcnt_go1:fqcnt_go1.go
 	$(GO) build $<
