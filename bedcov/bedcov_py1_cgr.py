@@ -1,4 +1,5 @@
-from timeit import default_timer as timer
+#!/usr/bin/env python
+
 import sys
 #########
 # To run the python version in terminal:
@@ -110,7 +111,6 @@ def overlap(a,max_level,start,end):
 if __name__ == "__main__":
     # 1. read in indexing bed file
     bed, i = {}, 0
-    start = timer()
     bed_1 = sys.argv[1]
     with open(bed_1) as fp:
         for line in fp:
@@ -118,17 +118,13 @@ if __name__ == "__main__":
             if not t[0] in bed: # check for chrom 
                 bed[t[0]] = []
             bed[t[0]].append(node(int(t[1]),int(t[2]))) # add new node to the same chrom list
-    sys.stderr.write("Read in {} sec\n".format(timer() - start))
     # 2. Index
-    start = timer()
     maxlevel_dict = {}
     for ctg in bed:
         bed[ctg]= sorted(bed[ctg], key=lambda l:l.start) # sort
         maxlevel_dict[ctg]=index_core(bed[ctg]) # append max level to another dictionary
-    sys.stderr.write("Index in {} sec\n".format(timer() - start))
     # 3. Query
     ## Overlap for each line in bed 2
-    start = timer()
     bed_2 = sys.argv[2]
     with open(bed_2) as fp:
         for line in fp:
@@ -151,8 +147,6 @@ if __name__ == "__main__":
                         cov_st, cov_en = st0, en0
                     elif cov_en < en0: cov_en = en0  #overlap with previous found intervals
                            #only need to check end, since 'out' is a sorted list
-                        #cov_en = cov_en if cov_en < en0 else en0
                 cov += cov_en - cov_st
                 #  print chrom, start, end, count, # of coverage nt
                 print("{}\t{}\t{}\t{}\t{}".format(t[0],t[1],t[2],len(out),cov))
-    sys.stderr.write("Query in {} sec\n".format(timer() - start))
