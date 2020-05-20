@@ -1,0 +1,13 @@
+[package]
+name = "biofast"
+version = "0.1.0"
+authors = ["Your Name <you@example.com>"]
+edition = "2018"
+
+[dependencies]
+flate2 = "1.0.14"
+bio = "0.30.1"
+
+[[bin]]
+name = "fqcnt_rustbio"
+path = "fqcnt/fqcnt_rs1_rustbio.rs"
