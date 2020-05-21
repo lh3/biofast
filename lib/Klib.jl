@@ -118,7 +118,7 @@ function destroy!(b::ByteBuffer)
 	return ret
 end
 
-tostring(b::ByteBuffer, n::Int) = String(unsafe_wrap(Vector{UInt8}, b.a, n))
+tostring(b::ByteBuffer, n::Int) = unsafe_string(b.a, n)
 
 #
 # GzFile
@@ -202,7 +202,7 @@ function readbyte(r::Bufio{T}) where {T<:IO}
 	end
 	c = r.buf[r.start]
 	r.start += 1
-	return c
+	return c % Int
 end
 
 trimret(buf::ByteBuffer, n) = n > 0 && unsafe_load(buf.a, n) == 0x0d ? n - 1 : n # remove trailing '\r' if present
@@ -237,17 +237,13 @@ function readuntil!(r::Bufio{T}, delim::Int = -1, offset = 0, keep::Bool = false
 		end
 		x = r.len + 1
 		if delim == -1 # use '\n' as the delimitor
-			for i = r.start:r.len
-				@inbounds if r.buf[i] == 0x0a x = i; break end
-			end
+			x = finddelimiter(0x0a, r.buf, r.start, r.len)
 		elseif delim == -2 # use ' ', '\t' or '\n' as the delimitor
 			for i = r.start:r.len
 				@inbounds if r.buf[i] == 0x20 || r.buf[i] == 0x09 || r.buf[i] == 0x0a x = i; break end
 			end
 		else
-			for i = r.start:r.len
-				@inbounds if r.buf[i] == delim x = i; break end
-			end
+			x = finddelimiter(UInt8(delim), r.buf, r.start, r.len)
 		end
 		l = keep && x <= r.len ? x - r.start + 1 : x - r.start
 		reserve!(r.bb, UInt64(offset + n + l))
@@ -258,6 +254,15 @@ function readuntil!(r::Bufio{T}, delim::Int = -1, offset = 0, keep::Bool = false
 	end
 	if (delim == -1 || delim == -2) && !keep n = trimret(r.bb, n) end # remove trailing '\r' if present
 	return n == 0 && r.iseof ? -1 : n
+end
+
+function finddelimiter(delim, buf, start, len)
+	ptr = pointer(buf, start)
+	p = ccall(:memchr, Ptr{Cvoid}, (Ptr{Cvoid}, Cint, Csize_t), ptr, delim, len - start + 1)
+	if p == C_NULL
+		return len + 1
+	end
+	return Int(p - ptr + start)
 end
 
 """
