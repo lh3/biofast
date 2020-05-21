@@ -41,7 +41,7 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 |[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)  |Nim       | 11.8|  3.6|kseq.h port|
 |[fqcnt\_js1\_k8.js](fqcnt/fqcnt_js1_k8.js)          |Javascript| 17.5|  9.4|kseq.h port|
 |[fqcnt\_go1.go](fqcnt/fqcnt_go1.go)                 |Go        | 19.1|  2.8|4-line only|
-|[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)      |Julia     | 22.9|  6.2|kseq.h port|
+|[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)      |Julia     | 19.8|  2.9|kseq.h port|
 |[fqcnt\_lua1\_klib.lua](fqcnt/fqcnt_lua1_klib.lua)  |LuaJIT    | 28.6| 27.2|partial kseq.h port|
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |PyPy      | 28.9| 14.6|partial kseq.h port; pypy|
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |Python    | 42.7| 19.1|partial kseq.h port|
@@ -73,6 +73,7 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 |[bedcov\_go1.go](bedcov/bedcov_go1.go)               |Go        | 34.0|  318.9 | 21.8|  47.3 |
 |[bedcov\_js1\_cgr.js](bedcov/bedcov_js1_cgr.jl)      |Javascript| 76.4| 2219.9 | 80.0| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov/bedcov_lua1_cgr.lua)  |LuaJIT    |174.7| 2668.0 |218.9| 364.6 |
+|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |PyPy      |     |        |5481.2|256.8 |
 
 * For the full table, see the [bedcov directory](bedcov).
 
