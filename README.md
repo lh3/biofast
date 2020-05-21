@@ -37,16 +37,16 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 |:-------|:---------|---------------------:|----------------------:|:---------|
 |[fqcnt\_c1\_kseq.c](fqcnt/fqcnt_c1_kseq.c)          |C         |  9.7|  1.4||
 |[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)      |Crystal   |  9.7|  1.5|kseq.h port|
+|[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)  |Nim       | 10.5|  2.3|kseq.h port|
 |[fqcnt\_rs1\_rustbio.rs](fqcnt/fqcnt_rs1_rustbio.rs)|Rust      | 10.6|  2.9|4-line only; rust-bio|
-|[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)  |Nim       | 11.8|  3.6|kseq.h port|
+|[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)      |Julia     | 11.2|  2.9|kseq.h port|
 |[fqcnt\_js1\_k8.js](fqcnt/fqcnt_js1_k8.js)          |Javascript| 17.5|  9.4|kseq.h port|
 |[fqcnt\_go1.go](fqcnt/fqcnt_go1.go)                 |Go        | 19.1|  2.8|4-line only|
-|[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)      |Julia     | 19.8|  2.9|kseq.h port|
 |[fqcnt\_lua1\_klib.lua](fqcnt/fqcnt_lua1_klib.lua)  |LuaJIT    | 28.6| 27.2|partial kseq.h port|
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |PyPy      | 28.9| 14.6|partial kseq.h port|
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |Python    | 42.7| 19.1|partial kseq.h port|
 
-* For the full table, see the [fqcnt directory](fqcnt).
+* For the full table and technical notes, see the [fqcnt directory](fqcnt).
 
 ### <a name="bedcov"></a>Computing the depth and breadth of coverage from BED files
 
@@ -73,20 +73,10 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 |[bedcov\_go1.go](bedcov/bedcov_go1.go)               |Go        | 34.0|  318.9 | 21.8|  47.3 |
 |[bedcov\_js1\_cgr.js](bedcov/bedcov_js1_cgr.jl)      |Javascript| 76.4| 2219.9 | 80.0| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov/bedcov_lua1_cgr.lua)  |LuaJIT    |174.7| 2668.0 |218.9| 364.6 |
-|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |PyPy      |     |        |5481.2|256.8 |
-|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |Python    |     |        |      |      |
+|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |PyPy    |17332.9| 1594.3 |5481.2|256.8 |
+|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |Python |>33770.4| 2317.6|>20722.0|313.7|
 
-* For the full table, see the [bedcov directory](bedcov).
-
-* Crystal, Nim and Julia use a long contiguous memory block for loaded
-  intervals on each chromosome. Javascript and LuaJIT instead use a list of
-  separate objects.
-
-* Bounds check is completely disabled for Nim and partially disabled for
-  Crystal. Bounds check might be partially disabled in Julia, too. Not sure.
-
-* For "g2r", sorting takes significant time. C uses a radix sort. Other
-  languages rely on their standard libraries.
+* For the full table and technical notes, see the [bedcov directory](bedcov).
 
 [dl]: https://github.com/lh3/biofast/releases/tag/biofast-data-v1
 [bp]: https://biopython.org/

@@ -80,8 +80,10 @@ when defined(windows):
   const libz = "zlib1.dll"
 elif defined(macosx):
   const libz = "libz.dylib"
+  const libc = "libc.dylib"
 else:
   const libz = "libz.so.1"
+  const libc = "libc.so.6"
 
 type
   gzFile = pointer
@@ -179,6 +181,9 @@ proc read*[T](f: var Bufio[T], buf: var string, sz: int,
   f.st += rest
   return off + rest - offset
 
+proc memchr(buf: pointer, c: cint, sz: csize_t): pointer {.cdecl, dynlib: libc,
+    importc: "memchr".}
+
 proc readUntil*[T](f: var Bufio[T], buf: var string, dret: var char,
     delim: int = -1, offset: int = 0): int {.discardable.} =
   if f.EOF and f.st >= f.en: return -1
@@ -198,15 +203,19 @@ proc readUntil*[T](f: var Bufio[T], buf: var string, dret: var char,
       else: break
     var x: int = f.en
     if delim == -1: # read a line
-      for i in f.st..<f.en:
-        if f.buf[i] == '\n': x = i; break
+      #for i in f.st..<f.en:
+      #  if f.buf[i] == '\n': x = i; break
+      var p = memchr(f.buf[f.st].addr, cint(0xa), csize_t(f.en - f.st))
+      if p != nil: x = cast[int](p) - cast[int](f.buf[0].addr)
     elif delim == -2: # read a field
       for i in f.st..<f.en:
         if f.buf[i] == '\t' or f.buf[i] == ' ' or f.buf[i] == '\n':
           x = i; break
     else: # read to other delimitors
-      for i in f.st..<f.en:
-        if f.buf[i] == char(delim): x = i; break
+      #for i in f.st..<f.en:
+      #  if f.buf[i] == char(delim): x = i; break
+      var p = memchr(f.buf[f.st].addr, cint(delim), csize_t(f.en - f.st))
+      if p != nil: x = cast[int](p) - cast[int](f.buf[0].addr)
     gotany = true
     if x > f.st: # something to write to buf[]
       let l = x - f.st

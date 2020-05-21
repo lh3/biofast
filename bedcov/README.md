@@ -7,3 +7,13 @@
 |[bedcov\_go1.go](bedcov_go1.go)               |Go        |                               | 34.0|  318.9 | 21.8|  47.3 |
 |[bedcov\_js1\_cgr.js](bedcov_js1_cgr.jl)      |Javascript|                               | 76.4| 2219.9 | 80.0| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov_lua1_cgr.lua)  |LuaJIT    |                               |174.1| 2668.0 |218.9| 364.6 |
+
+* Crystal, Nim and Julia use a long contiguous memory block for loaded
+  intervals on each chromosome. Javascript and LuaJIT instead use a list of
+  separate objects.
+
+* Bounds check is completely disabled for Nim and partially disabled for
+  Crystal. Bounds check might be partially disabled in Julia, too. Not sure.
+
+* For "g2r", sorting takes significant time. C uses a radix sort. Other
+  languages rely on their standard libraries.
