@@ -11,8 +11,8 @@ function main(args)
 	n, slen, qlen = 0, 0, 0
 	while (r = read(fx)) != nothing
 		n += 1
-		slen += length(r.seq)
-		qlen += length(r.qual)
+		slen += sizeof(r.seq)
+		qlen += sizeof(r.qual)
 	end
 	println(n, "\t", slen, "\t", qlen)
 end
