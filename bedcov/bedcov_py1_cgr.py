@@ -15,14 +15,6 @@ class node:
         self.max_val = end
         self.data = d 
 ##
-#  StackCell is used for checking overlapping intervals
-#
-class StackCell:
-    def __init__(self, k, x, w):
-        self.k = k # level of tree
-        self.x = x # node index
-        self.w = w # status, indicating whether left child has been processed
-##
 # This function index a given array a.
 # Input:
 #    a:  an array containing all the nodes
@@ -70,15 +62,15 @@ def overlap(a,max_level,start,end):
     t = 0
     # push the root; this is a top down traversal
     stack = [None]*64 # initialize an object list
-    stack[t] = StackCell(max_level,2**max_level-1,0) # root, top-down traversal
+    stack[t] = (max_level, 2**max_level-1, 0) # root, top-down traversal
     t+=1
     while t: # the following guarantees that numbers in "out" are always sorted
-        z = stack[t-1] 
+        (k, x, w) = stack[t-1]
         t-=1
         # 1. if we are in a small subtree; traverse every node in this subtree
-        if z.k <= 3:
-            i0 = int(z.x /2**z.k) * 2**z.k # i0, start node index in the subtree
-            i1 = i0 + 2**(z.k+1) - 1 # i1, maximum node index in subtree (next node at level k:i0+2^(k+1))
+        if k <= 3:
+            i0 = int(x /2**k) * 2**k # i0, start node index in the subtree
+            i1 = i0 + 2**(k+1) - 1 # i1, maximum node index in subtree (next node at level k:i0+2^(k+1))
             if i1 >= len(a): 
                 i1 = len(a)
             i = i0
@@ -87,22 +79,21 @@ def overlap(a,max_level,start,end):
                     yield a[i]
                 i+=1
         # 2. for a large tree, if left child not processed
-        elif z.w == 0: 
-            y = z.x - 2**(z.k-1) # the index of left child of z.x; 
-                                 # NB: y may be out of range (i.e. y>=len(a))
-            stack[t] = StackCell(z.k, z.x, 1); # re-add node z.x, but mark the left child having been processed
+        elif w == 0:
+            y = x - 2**(k-1) # the index of left child of x; NB: y may be out of range (i.e. y>=len(a))
+            stack[t] = (k, x, 1); # re-add node z.x, but mark the left child having been processed
             t+=1
             if y >= len(a): # push the left child if y is out of range 
-                stack[t] = StackCell(z.k - 1, y, 0)
+                stack[t] = (k - 1, y, 0)
                 t+=1
             elif a[y].max_val > start: # push the left child if y  may overlap with the query
-                stack[t] = StackCell(z.k - 1, y, 0)
+                stack[t] = (k - 1, y, 0)
                 t+=1
         # 3. need to push the right child
-        elif z.x < len(a):
-            if ((a[z.x].start < end) & (start < a[z.x].end)): # test if z.x overlaps the query; if yes, yield
-                yield a[z.x]
-            stack[t] = StackCell(z.k - 1, z.x + 2**(z.k-1), 0) # push the right child
+        elif x < len(a):
+            if ((a[x].start < end) & (start < a[x].end)): # test if z.x overlaps the query; if yes, yield
+                yield a[x]
+            stack[t] = (k - 1, x + 2**(k-1), 0) # push the right child
             t+=1
 
 # main function
