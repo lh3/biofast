@@ -202,7 +202,7 @@ function readbyte(r::Bufio{T}) where {T<:IO}
 	end
 	c = r.buf[r.start]
 	r.start += 1
-	return c
+	return c % Int
 end
 
 trimret(buf::ByteBuffer, n) = n > 0 && unsafe_load(buf.a, n) == 0x0d ? n - 1 : n # remove trailing '\r' if present
