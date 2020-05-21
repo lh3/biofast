@@ -2,9 +2,11 @@
 |:-------|:---------|:--------|---------------------:|----------------------:|:---------|
 |[fqcnt\_c1\_kseq.c](fqcnt_c1_kseq.c)          |C         |[kseq.h](../lib/kseq.h)     |  9.7|  1.4||
 |[fqcnt\_cr1\_klib.cr](fqcnt_cr1_klib.cr)      |Crystal   |[klib.cr](../lib/klib.cr)   |  9.7|  1.5|kseq.h port|
+|[fqcnt\_py7x\_fx.py](fqcnt_py7x_fx.py)        |PyPy      |[Fastx][fx.py]              |     |     |kseq.h binding|
 |[fqcnt\_rs1\_rustbio.rs](fqcnt_rs1_rustbio.rs)|Rust      |[rust-bio][rust-bio]        | 10.6|  2.9|rust-bio|
 |[fqcnt\_nim1\_klib.nim](fqcnt_nim1_klib.nim)  |Nim       |[klib.nim](../lib/klib.nim) | 11.8|  3.6|kseq.h port|
 |[fqcnt\_py6x\_pyfx.py](fqcnt_py6x_pyfx.py)    |Python    |[PyFastx][pyfx]             | 15.8|  7.3|kseq.h binding|
+|[fqcnt\_py7x\_fx.py](fqcnt_py7x_fx.py)        |Python    |[Fastx][fx.py]              |     |     |kseq.h binding|
 |[fqcnt\_py3x\_mappy.py](fqcnt_py3x_mappy.py)  |Python    |[mappy][mappy]              | 16.6|  8.7|kseq.h binding|
 |[fqcnt\_js1\_k8.js](fqcnt_js1_k8.js)          |Javascript|                            | 17.5|  9.4|kseq.h port|
 |[fqcnt\_py7x\_pysam.py](fqcnt_py7x_pysam.py)  |Python    |[pysam][pysam]              | 18.5| 12.7|kseq.h binding|
@@ -28,7 +30,7 @@
 * Julia takes ~11 seconds to compile the Fastx.jl implementation. The numbers
   in the table exclude this startup time.
 
-* External libraries: biopython-1.76, pyfastx-0.6.10, mappy-2.17 and
+* External libraries: biopython-1.76, pyfastx-0.6.10, fastx-0.0.2, mappy-2.17 and
   Fastx.jl-1.0.0.
 
 * C, Crystal, Nim, Rust, Javascript, Go, Julia, LuaJIT and PyPy runs were timed by
@@ -38,5 +40,6 @@
 [fx.jl]: https://github.com/BioJulia/FASTX.jl
 [mappy]: https://github.com/lh3/minimap2/tree/master/python
 [pyfx]: https://github.com/lmdu/pyfastx
+[fx.py]: https://github.com/cjw85/fastx
 [pysam]: https://pysam.readthedocs.io/en/latest/api.html
 [rust-bio]: https://github.com/rust-bio/rust-bio
