@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sys
 #########
 # To run the python version in terminal:
 #   python bedcov_py_iitree.py test1.bed test2.bed
@@ -69,7 +68,6 @@ def index_core(a):
 #   out: a list containing all the overlapping node index
 def overlap(a,max_level,start,end):
     t = 0
-    out = []
     # push the root; this is a top down traversal
     stack = [None]*64 # initialize an object list
     stack[t] = StackCell(max_level,2**max_level-1,0) # root, top-down traversal
@@ -86,7 +84,7 @@ def overlap(a,max_level,start,end):
             i = i0
             while (i < i1): 
                 if (a[i].start < end) & (start < a[i].end): # if overlap, append to out[]
-                    out.append(i)
+                    yield a[i]
                 i+=1
         # 2. for a large tree, if left child not processed
         elif z.w == 0: 
@@ -102,12 +100,13 @@ def overlap(a,max_level,start,end):
                 t+=1
         # 3. need to push the right child
         elif z.x < len(a):
-            if ((a[z.x].start < end) & (start < a[z.x].end)): # test if z.x overlaps the query; if yes, append to out[]
-                out.append(z.x)
+            if ((a[z.x].start < end) & (start < a[z.x].end)): # test if z.x overlaps the query; if yes, yield
+                yield a[z.x]
             stack[t] = StackCell(z.k - 1, z.x + 2**(z.k-1), 0) # push the right child
             t+=1
-    return out
+
 # main function
+import sys
 if __name__ == "__main__":
     # 1. read in indexing bed file
     bed, i = {}, 0
@@ -132,11 +131,10 @@ if __name__ == "__main__":
             if not t[0] in bed:
                 print("{}\t{}\t{}\t0\t0".format(t[0], t[1], t[2]))
             else:
-                cov,cov_st,cov_en = 0,0,0
+                cov, cov_st, cov_en, n = 0, 0, 0, 0
                 st1,en1=int(t[1]),int(t[2])
-                out = overlap(bed[t[0]],max_level=maxlevel_dict[t[0]],start=st1, end=en1) # index of overlap intervals
-                for r in out:
-                    item = bed[t[0]][r]
+                for item in overlap(bed[t[0]], max_level=maxlevel_dict[t[0]], start=st1, end=en1):
+                    n += 1
                     # calcualte overlap length/coverage
                     st0,en0=item.start,item.end
                     if (st0 < st1): st0 = st1
@@ -149,4 +147,4 @@ if __name__ == "__main__":
                            #only need to check end, since 'out' is a sorted list
                 cov += cov_en - cov_st
                 #  print chrom, start, end, count, # of coverage nt
-                print("{}\t{}\t{}\t{}\t{}".format(t[0],t[1],t[2],len(out),cov))
+                print("{}\t{}\t{}\t{}\t{}".format(t[0], t[1], t[2], n, cov))
