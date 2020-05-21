@@ -118,7 +118,7 @@ function destroy!(b::ByteBuffer)
 	return ret
 end
 
-tostring(b::ByteBuffer, n::Int) = String(unsafe_wrap(Vector{UInt8}, b.a, n))
+tostring(b::ByteBuffer, n::Int) = unsafe_string(b.a, n)
 
 #
 # GzFile
