@@ -37,13 +37,13 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 |:-------|:---------|---------------------:|----------------------:|:---------|
 |[fqcnt\_c1\_kseq.c](fqcnt/fqcnt_c1_kseq.c)          |C         |  9.7|  1.4||
 |[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)      |Crystal   |  9.7|  1.5|kseq.h port|
-|[fqcnt\_rs1\_rustbio.rs](fqcnt/fqcnt_rs1_rustbio.rs)|Rust      | 10.6|  2.9|rust-bio|
+|[fqcnt\_rs1\_rustbio.rs](fqcnt/fqcnt_rs1_rustbio.rs)|Rust      | 10.6|  2.9|4-line only; rust-bio|
 |[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)  |Nim       | 11.8|  3.6|kseq.h port|
 |[fqcnt\_js1\_k8.js](fqcnt/fqcnt_js1_k8.js)          |Javascript| 17.5|  9.4|kseq.h port|
 |[fqcnt\_go1.go](fqcnt/fqcnt_go1.go)                 |Go        | 19.1|  2.8|4-line only|
 |[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)      |Julia     | 19.8|  2.9|kseq.h port|
 |[fqcnt\_lua1\_klib.lua](fqcnt/fqcnt_lua1_klib.lua)  |LuaJIT    | 28.6| 27.2|partial kseq.h port|
-|[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |PyPy      | 28.9| 14.6|partial kseq.h port; pypy|
+|[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |PyPy      | 28.9| 14.6|partial kseq.h port|
 |[fqcnt\_py2\_rfq.py](fqcnt/fqcnt_py2_rfq.py)        |Python    | 42.7| 19.1|partial kseq.h port|
 
 * For the full table, see the [fqcnt directory](fqcnt).
@@ -74,6 +74,7 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 |[bedcov\_js1\_cgr.js](bedcov/bedcov_js1_cgr.jl)      |Javascript| 76.4| 2219.9 | 80.0| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov/bedcov_lua1_cgr.lua)  |LuaJIT    |174.7| 2668.0 |218.9| 364.6 |
 |[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |PyPy      |     |        |5481.2|256.8 |
+|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |Python    |     |        |      |      |
 
 * For the full table, see the [bedcov directory](bedcov).
 
