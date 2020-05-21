@@ -62,38 +62,35 @@ def overlap(a,max_level,start,end):
     t = 0
     # push the root; this is a top down traversal
     stack = [None]*64 # initialize an object list
-    stack[t] = (max_level, 2**max_level-1, 0) # root, top-down traversal
+    stack[t] = (max_level, (1<<max_level) - 1, 0) # root, top-down traversal
     t+=1
     while t: # the following guarantees that numbers in "out" are always sorted
-        (k, x, w) = stack[t-1]
-        t-=1
+        t -= 1
+        (k, x, w) = stack[t]
         # 1. if we are in a small subtree; traverse every node in this subtree
         if k <= 3:
-            i0 = int(x /2**k) * 2**k # i0, start node index in the subtree
-            i1 = i0 + 2**(k+1) - 1 # i1, maximum node index in subtree (next node at level k:i0+2^(k+1))
+            i0 = x >> k << k # i0, start node index in the subtree
+            i1 = i0 + (1<<(k+1)) - 1 # i1, maximum node index in subtree (next node at level k:i0+2^(k+1))
             if i1 >= len(a): 
                 i1 = len(a)
             i = i0
             while (i < i1): 
-                if (a[i].start < end) & (start < a[i].end): # if overlap, append to out[]
+                if (a[i].start < end) and (start < a[i].end): # if overlap, append to out[]
                     yield a[i]
                 i+=1
         # 2. for a large tree, if left child not processed
         elif w == 0:
-            y = x - 2**(k-1) # the index of left child of x; NB: y may be out of range (i.e. y>=len(a))
+            y = x - (1<<(k-1)) # the index of left child of x; NB: y may be out of range (i.e. y>=len(a))
             stack[t] = (k, x, 1); # re-add node z.x, but mark the left child having been processed
             t+=1
-            if y >= len(a): # push the left child if y is out of range 
-                stack[t] = (k - 1, y, 0)
-                t+=1
-            elif a[y].max_val > start: # push the left child if y  may overlap with the query
+            if y >= len(a) or a[y].max_val > start: # push the left child if y is out of range or if y may overlap with the query
                 stack[t] = (k - 1, y, 0)
                 t+=1
         # 3. need to push the right child
         elif x < len(a):
-            if ((a[x].start < end) & (start < a[x].end)): # test if z.x overlaps the query; if yes, yield
+            if ((a[x].start < end) and (start < a[x].end)): # test if z.x overlaps the query; if yes, yield
                 yield a[x]
-            stack[t] = (k - 1, x + 2**(k-1), 0) # push the right child
+            stack[t] = (k - 1, x + (1<<(k-1)), 0) # push the right child
             t+=1
 
 # main function
