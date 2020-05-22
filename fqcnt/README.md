@@ -50,4 +50,5 @@
 [fx.py]: https://github.com/cjw85/fastx
 [pysam]: https://pysam.readthedocs.io/en/latest/api.html
 [rust-bio]: https://github.com/rust-bio/rust-bio
+[needletail]: https://github.com/onecodex/needletail
 [julia-zlib]: https://github.com/JuliaPackaging/Yggdrasil/pull/1051
