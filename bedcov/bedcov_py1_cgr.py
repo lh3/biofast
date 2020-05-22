@@ -30,8 +30,8 @@ def index_core(a):
         a[i].max_val = a[i].end
         last = a[i].max_val
         i +=2
-    while(2**k < len(a)): # process internal nodes in the bottom-up order
-        x = 2**(k-1) # x: index of the node
+    while 1<<k < len(a): # process internal nodes in the bottom-up order
+        x = 1 << (k-1) # x: index of the node
         i0 = (x*2) - 1 # i0 is the first node
         step = x*4  # x: index of the node
         i=i0
@@ -44,7 +44,7 @@ def index_core(a):
                                                        # max value of currect sub-tree
             i+=step
         # last_i now points to the index of parent of the original last_i
-        last_i = last_i - x if last_i/2**k == 1 else last_i + x
+        last_i = last_i - x if (last_i>>k&1) == 1 else last_i + x
         if last_i < len(a): # update 'last' accordingly
             if a[last_i].max_val > last:
                 last = a[last_i].max_val # update max value for the whole tree
