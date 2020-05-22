@@ -91,36 +91,6 @@ end
 getopt(args::Array{String}, ostr::String, longopts::Array{String} = String[]) = Getopt(args, ostr, longopts)
 
 #
-# ByteBuffer
-#
-mutable struct ByteBuffer <: AbstractVector{UInt8}
-	a::Ptr{UInt8}
-	m::UInt64
-
-	function ByteBuffer()
-		x = new(C_NULL, 0)
-		finalizer(destroy!, x)
-		return x
-	end
-end
-
-function reserve!(b::ByteBuffer, z::UInt64)
-	if z > b.m
-		x = z - 1; x |= x >> 1; x |= x >> 2; x |= x >> 4; x |= x >> 8; x |= x >> 16; x |= x >> 32; x += 1
-		b.m = (x<<1) + (x<<2) >= z ? (x<<1) + (x<<2) : x
-		b.a = ccall(:realloc, Ptr{Cvoid}, (Ptr{Cvoid}, Csize_t), b.a, b.m)
-	end
-end
-
-function destroy!(b::ByteBuffer)
-	ret = ccall(:free, Cint, (Ptr{Cvoid},), b.a)
-	b.a, b.m = C_NULL, 0
-	return ret
-end
-
-tostring(b::ByteBuffer, n::Int) = unsafe_string(b.a, n)
-
-#
 # GzFile
 #
 
@@ -155,9 +125,9 @@ mutable struct Bufio{T<:IO} <: IO # TODO: support writing
 	len::Int
 	iseof::Bool
 	buf::Vector{UInt8}
-	bb::ByteBuffer
+	bb::Vector{UInt8}
 
-	Bufio{T}(fp::T, mode::String = "r", bufsize = 0x10000) where {T<:IO} = new{T}(fp, 1, 0, false, Vector{UInt8}(undef, bufsize), ByteBuffer())
+	Bufio{T}(fp::T, mode::String = "r", bufsize = 0x10000) where {T<:IO} = new{T}(fp, 1, 0, false, Vector{UInt8}(undef, bufsize), Vector{UInt8}(undef, 0))
 end
 
 """
@@ -209,7 +179,7 @@ function readbyte(r::Bufio{T}) where {T<:IO}
 	return c % Int
 end
 
-trimret(buf::ByteBuffer, n) = n > 0 && unsafe_load(buf.a, n) == 0x0d ? n - 1 : n # remove trailing '\r' if present
+trimret(buf::Vector{UInt8}, n) = n > 0 && buf[n] == 0x0d ? n - 1 : n # remove trailing '\r' if present
 
 """
     readuntil!(r::Bufio{T}, delim::Int = -1, offset = 0, keep::Bool = false) where T<:IO
@@ -228,7 +198,7 @@ returned from `Base.readbytes!()`.
 """
 function readuntil!(r::Bufio{T}, delim::Int = -1, offset = 0, keep::Bool = false) where {T<:IO}
 	if r.start > r.len && r.iseof return -1 end
-	n = 0
+	n = 1
 	while true
 		if r.start > r.len
 			if r.iseof == false
@@ -250,14 +220,14 @@ function readuntil!(r::Bufio{T}, delim::Int = -1, offset = 0, keep::Bool = false
 			x = finddelimiter(UInt8(delim), r.buf, r.start, r.len)
 		end
 		l = keep && x <= r.len ? x - r.start + 1 : x - r.start
-		reserve!(r.bb, UInt64(offset + n + l))
-		unsafe_copyto!(r.bb.a + offset + n, pointer(r.buf, r.start), l)
+		resize!(r.bb, UInt64(offset + n + l))
+		unsafe_copyto!(pointer(r.bb, offset + n), pointer(r.buf, r.start), l)
 		n += l
 		r.start = x + 1
 		if x <= r.len break end
 	end
 	if (delim == -1 || delim == -2) && !keep n = trimret(r.bb, n) end # remove trailing '\r' if present
-	return n == 0 && r.iseof ? -1 : n
+	return n == 1 && r.iseof ? -1 : n - 1
 end
 
 function finddelimiter(delim, buf, start, len)
@@ -276,7 +246,7 @@ Read a line and return it as a string on success or `nothing` on end-of-file.
 """
 function Base.readline(r::Bufio{T}) where {T<:IO}
 	n = readuntil!(r)
-	n >= 0 ? tostring(r.bb, n) : nothing
+	n >= 0 ? unsafe_string(pointer(r.bb), n) : nothing
 end
 
 #
@@ -325,24 +295,24 @@ function Base.read(f::FastxReader{T}) where {T<:IO}
 	name = comment = seq = "" # reset all members
 	n = readuntil!(f.r, -2, 0, true)
 	if n < 0 return nothing end # normal exit: EOF
-	if unsafe_load(f.r.bb.a, n) == 0x0a # end-of-line; no comments
+	if f.r.bb[n] == 0x0a # end-of-line; no comments
 		n = trimret(f.r.bb, n - 1)
-		name = tostring(f.r.bb, n)
+		name = unsafe_string(pointer(f.r.bb), n)
 	else # there are FASTX comments
-		name = tostring(f.r.bb, n - 1)
+		name = unsafe_string(pointer(f.r.bb), n - 1)
 		n = readuntil!(f.r)
-		comment = tostring(f.r.bb, n)
+		comment = unsafe_string(pointer(f.r.bb), n)
 	end
 	ls = 0
 	while (c = readbyte(f.r)) >= 0 && c != 0x3e && c != 0x40 && c != 0x2b # 0x2b = '+'
 		if c == 0x0a continue end # skip empty lines
-		reserve!(f.r.bb, UInt64(ls + 1))
-		unsafe_store!(f.r.bb.a, c, ls + 1) # write the first character
+		resize!(f.r.bb, UInt64(ls + 1))
+		f.r.bb[ls + 1] = c # write the first character
 		ls += 1
 		ls += readuntil!(f.r, -1, ls) # read the rest of the line
 	end
 	if c == 0x3e || c == 0x40 f.last = c end # the first header char has been read
-	seq = tostring(f.r.bb, ls) # sequence read
+	seq = unsafe_string(pointer(f.r.bb), ls) # sequence read
 	@assert ls == lastindex(seq) # guard against UTF-8
 	if c != 0x2b return FastxRecord(name, seq, "", comment) end # FASTA
 	while (c = readbyte(f.r)) >= 0 && c != 0x0a end # skip the rest of '+' line
@@ -355,7 +325,7 @@ function Base.read(f::FastxReader{T}) where {T<:IO}
 	end
 	f.last = 0
 	if lq != ls f.errno = -2; return nothing end # error exit: qual string is of a different length
-	qual = tostring(f.r.bb, lq) # quality read
+	qual = unsafe_string(pointer(f.r.bb), lq) # quality read
 	@assert lq == lastindex(qual) # guard against UTF-8
 	return FastxRecord(name, seq, qual, comment)
 end
