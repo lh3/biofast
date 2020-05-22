@@ -7,7 +7,7 @@
 #--------------------------Main function---------------------------------------
 fqcnt = function(fq = NULL) {
   
-  nreads = nseq = nqual =0 #Trackers
+  nreads = nseq = nqual = 0 #Trackers
   
   isgz = summary(object = file(fq))$class == "gzfile"
   if(isgz){
@@ -16,54 +16,27 @@ fqcnt = function(fq = NULL) {
     con = file(fq, "r")
   }
   
-  #Poor mans minimal R object (rname with ^@, seqlen, is_placeholder_present, quallen, is_complete)
-  rec_obj = c(0, 0, 0, 0, FALSE)
-  rname = ""
-  
   while(TRUE) {
     line = readLines(con, n = 1, skipNul = TRUE)
     
-    #End of the file - update last entry and exit
     if(length(line) == 0){
-      if(rec_obj[5]){
-        if(rec_obj[2] != rec_obj[4]){
-          stop("Sequence and Quality lengths differ for the read: ", rname)
-        }
-        nreads = nreads+1
-        nseq = nseq + rec_obj[2]
-        nqual = nqual + rec_obj[4]
-      }
       break
     }
-
-    first_char = substr(x = line, start = 1, stop = 1)
     
-    if(first_char == "@") {
-      rec_obj[1] = 1
-      rname = line
-    } else if (rec_obj[1] == 1) {
-      if (first_char == "+") {
-        rec_obj[3] = 1
-      } else{
-        if (rec_obj[2] == 0) {
-          rec_obj[2] = nchar(line)
-        } else if (rec_obj[4] == 0) {
-          rec_obj[4] = nchar(line)
-          rec_obj[5] = TRUE
+    #substr is faster than grepl for checking first character
+    if(substr(x = line, start = 1, stop = 1) == "@") {
+      next_three_lines = readLines(con, n = 3, skipNul = TRUE)
+      if(nchar(next_three_lines)[1] == nchar(next_three_lines)[3]){
+        if(substr(start = 1, stop = 1, x = next_three_lines[2]) == "+"){
+          nreads  = nreads + 1
+          nseq = nseq + nchar(next_three_lines[1])
+          nqual = nqual + nchar(next_three_lines[3])
         }else{
-          stop("Not a proper fastq record!")
+          stop(line, " is not a proper fastq record!")
         }
+      }else{
+        stop("Sequence and Quality lengths (",  nchar(next_three_lines[1]), ",", nchar(next_three_lines)[3],") differ for the read: ", line)
       }
-    }
-    
-    if(rec_obj[5]){
-      if(rec_obj[2] != rec_obj[4]){
-        stop("Sequence and Quality lengths differ for the read: ", rname)
-      }
-      nreads = nreads+1
-      nseq = nseq + rec_obj[2]
-      nqual = nqual + rec_obj[4]
-      rec_obj = c(0, 0, 0, 0, FALSE) #Reset
     }
   }
   
