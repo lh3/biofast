@@ -35,8 +35,8 @@ quality. The input file is `M_abscessus_HiSeq.fq` in
 
 |Program | Language | t<sub>gzip</sub> (s) | t<sub>plain</sub> (s) | Comments |
 |:-------|:---------|---------------------:|----------------------:|:---------|
-|[fqcnt\_rs2\_needletail.rs](fqcnt_rs2_needletail.rs)|Rust      |  9.3|  0.8|[needletail][nt]|
-|[fqcnt\_c1\_kseq.c](fqcnt/fqcnt_c1_kseq.c)          |C         |  9.7|  1.4||
+|[fqcnt\_rs2\_needletail.rs](fqcnt/fqcnt_rs2_needletail.rs)|Rust|  9.3|  0.8|[needletail][nt]; fasta/mostly 4-line fastq|
+|[fqcnt\_c1\_kseq.c](fqcnt/fqcnt_c1_kseq.c)          |C         |  9.7|  1.4|multi-line fasta/fastq|
 |[fqcnt\_cr1\_klib.cr](fqcnt/fqcnt_cr1_klib.cr)      |Crystal   |  9.7|  1.5|kseq.h port|
 |[fqcnt\_nim1\_klib.nim](fqcnt/fqcnt_nim1_klib.nim)  |Nim       | 10.5|  2.3|kseq.h port|
 |[fqcnt\_jl1\_klib.jl](fqcnt/fqcnt_jl1_klib.jl)      |Julia     | 11.2|  2.9|kseq.h port|
