@@ -4,6 +4,8 @@ PROG=fqcnt_c1_kseq fqcnt_nim1_klib fqcnt_go1 fqcnt_rs
 NIM=nim
 GO=go
 CARGO=cargo
+AMM=amm
+MILL=mill
 PROJECT_ROOT := $(shell realpath ../)
 
 .PHONY:all clean
@@ -26,6 +28,20 @@ fqcnt_rs:
 .PHONY: rust
 rust: fqcnt_rs
 	@echo "Rust binaries are in ./bin/"
+
+# Scala - amm
+# Ammnoite is required to compile and run the scala script. Please obtain from ammonite.io:
+# $ sudo sh -c '(echo "#!/usr/bin/env sh" \
+#     && curl -L https://github.com/lihaoyi/Ammonite/releases/download/2.1.4/2.13-2.1.4) > /usr/local/bin/amm \
+#     && chmod +x /usr/local/bin/amm' \
+#     && amm
+fqcnt_scala_amm_fgbio: fqcnt_scala_fgbio.sc
+	echo "java -Xmx4g -jar \$$(which $(AMM)) --no-home-predef $< \$$@" > $@ 
+	chmod 755 $@
+
+# Scala - mill: http://www.lihaoyi.com/mill/
+fqcnt_scala_jar_fgbio: scala/tools/src/com/github/biofast/FgBio.scala
+	cd scala && $(MILL) tools.localJar
 
 clean:
 	rm -fr *.dSYM $(PROG)
