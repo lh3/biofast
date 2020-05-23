@@ -22,6 +22,10 @@
 |[fqcnt\_py4x\_bpitr.py](fqcnt_py4x_bpitr.py)  |Python    |[BioPython][bp]             | 37.9| 18.1|FastqGeneralIterator|
 |[fqcnt\_py2\_rfq.py](fqcnt_py2_rfq.py)        |Python    |                            | 42.7| 19.1|partial kseq.h port|
 |[fqcnt\_py5x\_bp.py](fqcnt_py5x_bp.py)        |Python    |[BioPython][bp]             |135.8|107.1|SeqIO.parse|
+|[fqcnt\_scala\_fgbio.sc](fqcnt_scala_fgbio.sc) |Scala/Ammonite|[fgbio][fgbio],[ammonite][ammonite]|TBD|TBD|FastqSource|
+|[fqcnt\_scala\_fgbio.sc](fqcnt_scala_fgbio.sc) |Scala/Ammnoite|[commons.io][commons.io][ammonite][ammonite]|TBD|TBD|Io.readlines|
+|[FgBio.scala](scala/tools//src/com/github/biofast/FgBio.scala) |Scala/JAR     |[fgbio][fgbio]             |TBD|TBD|FastqSource|
+|[FgBio.scala](scala/tools//src/com/github/biofast/FgBio.scala) |Scala/JAR     |[commons.io][commons.io]    |TBD|TBD|Io.readlines|
 
 * Crystal, Nim, Julia (jl1) and Javascript use an algorithm very similar to
   [kseq.h](../lib/kseq.h). LuaJIT and the second Python script (py2) are
@@ -44,6 +48,9 @@
 * C, Crystal, Nim, Rust, Javascript, Go, Julia, LuaJIT, PyPy and Python C
   binding runs were timed by hyperfine.
 
+* Scala takes ~TBD seconds to compile the `fqcnt_scala_fgbio.sc` implementation.  The numbers
+  in the table exclude this startup time.
+
 [bp]: https://biopython.org/
 [fx.jl]: https://github.com/BioJulia/FASTX.jl
 [mappy]: https://github.com/lh3/minimap2/tree/master/python
@@ -51,7 +58,9 @@
 [fx.py]: https://github.com/cjw85/fastx
 [pysam]: https://pysam.readthedocs.io/en/latest/api.html
 [rust-bio]: https://github.com/rust-bio/rust-bio
-[needletail]: https://github.com/onecodex/needletail
 [julia-zlib]: https://github.com/JuliaPackaging/Yggdrasil/pull/1051
 [nt]: https://github.com/onecodex/needletail
 [nt-comm]: https://github.com/lh3/biofast/pull/11#issuecomment-633066810
+[fgbio]: http://fulcrumgenomics.github.io/fgbio/
+[commons.io]: https://javadoc.io/static/com.fulcrumgenomics/commons_2.12/1.0.0/com/fulcrumgenomics/commons/io/Io$.html#readLinesFromResource(name:String):Iterator[String]
+[ammnoite]: http://ammonite.io/
