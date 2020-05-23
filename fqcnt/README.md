@@ -1,9 +1,10 @@
 |Program | Language | Library | t<sub>gzip</sub> (s) | t<sub>plain</sub> (s) | Comments |
 |:-------|:---------|:--------|---------------------:|----------------------:|:---------|
+|[fqcnt\_rs2\_needletail.rs](fqcnt_rs2_needletail.rs)|Rust|[needletail][nt]            |  9.3|  0.8|rust-bio|
 |[fqcnt\_c1\_kseq.c](fqcnt_c1_kseq.c)          |C         |[kseq.h](../lib/kseq.h)     |  9.7|  1.4||
 |[fqcnt\_cr1\_klib.cr](fqcnt_cr1_klib.cr)      |Crystal   |[klib.cr](../lib/klib.cr)   |  9.7|  1.5|kseq.h port|
+|[fqcnt\_rs1\_rustbio.rs](fqcnt_rs1_rustbio.rs)|Rust      |[rust-bio][rust-bio]        | 10.0|  2.4|rust-bio|
 |[fqcnt\_nim1\_klib.nim](fqcnt_nim1_klib.nim)  |Nim       |[klib.nim](../lib/klib.nim) | 10.5|  2.3|kseq.h port|
-|[fqcnt\_rs1\_rustbio.rs](fqcnt_rs1_rustbio.rs)|Rust      |[rust-bio][rust-bio]        | 10.6|  2.9|rust-bio|
 |[fqcnt\_jl1\_klib.jl](fqcnt_jl1_klib.jl)      |Julia     |[Klib.jl](../lib/Klib.jl)   | 11.1|  2.9|kseq.h port|
 |[fqcnt\_py8x\_fx.py](fqcnt_py8x_fx.py)        |PyPy      |[Fastx][fx.py]; cffi        | 11.5|  3.1|kseq.h binding|
 |[fqcnt\_py6x\_pyfx.py](fqcnt_py6x_pyfx.py)    |Python    |[PyFastx][pyfx]             | 15.8|  7.3|kseq.h binding|
@@ -52,3 +53,4 @@
 [rust-bio]: https://github.com/rust-bio/rust-bio
 [needletail]: https://github.com/onecodex/needletail
 [julia-zlib]: https://github.com/JuliaPackaging/Yggdrasil/pull/1051
+[nt]: https://github.com/onecodex/needletail
