@@ -73,8 +73,8 @@ Both input BED files can be found in `biofast-data-v1.tar.gz` from the
 |[bedcov\_go1.go](bedcov/bedcov_go1.go)               |Go        | 34.0|  318.9 | 21.8|  47.3 |
 |[bedcov\_js1\_cgr.js](bedcov/bedcov_js1_cgr.jl)      |Javascript| 76.4| 2219.9 | 80.0| 316.8 |
 |[bedcov\_lua1\_cgr.lua](bedcov/bedcov_lua1_cgr.lua)  |LuaJIT    |174.7| 2668.0 |218.9| 364.6 |
-|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |PyPy    |17332.9| 1594.3 |5481.2|256.8 |
-|[bedcov\_py1\_cgr.lua](bedcov/bedcov_py1_cgr.py)     |Python |>33770.4| 2317.6|>20722.0|313.7|
+|[bedcov\_py1\_cgr.py](bedcov/bedcov_py1_cgr.py)     |PyPy    |17332.9| 1594.3 |5481.2|256.8 |
+|[bedcov\_py1\_cgr.py](bedcov/bedcov_py1_cgr.py)     |Python |>33770.4| 2317.6|>20722.0|313.7|
 
 * For the full table and technical notes, see the [bedcov directory](bedcov).
 
