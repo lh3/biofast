@@ -4,6 +4,7 @@ use std::env;
 use std::fs::File;
 use std::io::BufReader;
 use std::path::{Path, PathBuf};
+use bio::io::fastq::FastqRead;
 
 /// A an "extension" trait to allow for extending the [`std::path::Path`](https://doc.rust-lang.org/nightly/std/path/struct.Path.html) struct.
 trait PathExt {
@@ -54,14 +55,19 @@ fn main() {
         Box::new(file_handle)
     };
 
-    let records = fastq::Reader::new(stream).records().map(|r| r.unwrap());
+    let mut reader = fastq::Reader::new(stream);
+    let mut record = fastq::Record::new();
     let mut n: u32 = 0;
     let mut slen: u64 = 0;
     let mut qlen: u64 = 0;
-    for record in records {
+
+    reader.read(&mut record).expect("Failed to parse record");
+    while !record.is_empty() {
         n += 1;
         slen += record.seq().len() as u64;
         qlen += record.qual().len() as u64;
+        reader.read(&mut record).expect("Failed to parse record.");
     }
+
     println!("{}\t{}\t{}", n, slen, qlen);
 }
