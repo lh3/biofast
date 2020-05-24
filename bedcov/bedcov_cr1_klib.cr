@@ -6,6 +6,7 @@ if ARGV.size < 2
 end
 
 include Klib
+STDOUT.flush_on_newline = false
 
 alias SType = Int32
 bed = Hash(String, Array(IITree::Interval(SType, Int32))).new
