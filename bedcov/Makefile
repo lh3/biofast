@@ -1,9 +1,10 @@
 CFLAGS=-g -Wall -O2
 LIBS=-lz
-PROG=bedcov_c1_cgr bedcov_nim1_klib bedcov_cr1_klib bedcov_go1
+PROG=bedcov_c1_cgr bedcov_nim1_klib bedcov_cr1_klib bedcov_go1 bedcov_d_dgr
 NIM=nim
 CRYSTAL=crystal
 GO=go
+LDC=ldc2
 
 .PHONY:all clean
 
@@ -20,6 +21,9 @@ bedcov_cr1_klib:bedcov_cr1_klib.cr ../lib/klib.cr
 
 bedcov_go1:bedcov_go1.go
 	$(GO) build $<
+
+bedcov_d_dgr:bedcov_d_dgr.d
+	$(LDC) -O3 -release -flto=full $<
 
 clean:
 	rm -fr *.dSYM $(PROG)
