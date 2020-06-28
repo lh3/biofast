@@ -9,31 +9,21 @@ let main argv =
         eprintfn "Usage: dotnet <path-to-dll> <loaded.bed> <streamed.bed>"
         Environment.Exit(1)
 
-    let fileStream = new FileStream(argv.[0], FileMode.Open)
-    let reader = new StreamReader(fileStream)
-
     let bed = Dictionary<string, ResizeArray<IITree.Interval>>()
     let mutable i = 0
-    let mutable eof = false
-    while not eof do
-        let line = reader.ReadLine()
-        if isNull line then
-            eof <- true
-        else
-            let fields = line.Split('\t')
-            let list = bed.GetValueOrDefault(fields.[0], ResizeArray<IITree.Interval>())
-            if list.Count = 0 then
-                bed.Add(fields.[0], list)
-            list.Add(IITree.Interval(Int32.Parse fields.[1], Int32.Parse fields.[2], 0, i))
-            i <- i + 1
+    for line in File.ReadLines(argv.[0]) do
+        let fields = line.Split('\t')
+        let list = bed.GetValueOrDefault(fields.[0], ResizeArray<IITree.Interval>())
+        if list.Count = 0 then
+            bed.Add(fields.[0], list)
+        list.Add(IITree.Interval(Int32.Parse fields.[1], Int32.Parse fields.[2], 0, i))
+        i <- i + 1
 
     let indexed = Dictionary<string, IITree.IndexedTree>()
     for item in bed do
         indexed.Add(item.Key, IITree.index item.Value)
     
-    let lines1 = File.ReadAllLines(argv.[1])
-
-    for line in lines1 do
+    for line in File.ReadLines(argv.[1]) do
         let fields = line.Split('\t')
         let found, tree = indexed.TryGetValue fields.[0]
         
