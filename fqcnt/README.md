@@ -1,6 +1,6 @@
 |Program | Language | Library | t<sub>gzip</sub> (s) | t<sub>plain</sub> (s) | Comments |
 |:-------|:---------|:--------|---------------------:|----------------------:|:---------|
-|[fqcnt\_rs2\_needletail.rs](fqcnt_rs2_needletail.rs)|Rust|[needletail][nt]            |  9.3|  0.8|fasta/[mostly][nt-comm] 4-line fastq|
+|[fqcnt\_rs2\_needletail.rs](fqcnt_rs2_needletail.rs)|Rust|[needletail][nt]            |  9.3|  0.8|fasta/4-line fastq|
 |[fqcnt\_c1\_kseq.c](fqcnt_c1_kseq.c)          |C         |[kseq.h](../lib/kseq.h)     |  9.7|  1.4|multi-line fasta/fastq|
 |[fqcnt\_cr1\_klib.cr](fqcnt_cr1_klib.cr)      |Crystal   |[klib.cr](../lib/klib.cr)   |  9.7|  1.5|kseq.h port|
 |[fqcnt\_rs1\_rustbio.rs](fqcnt_rs1_rustbio.rs)|Rust      |[rust-bio][rust-bio]        | 10.0|  2.4|rust-bio|
@@ -60,7 +60,6 @@
 [rust-bio]: https://github.com/rust-bio/rust-bio
 [julia-zlib]: https://github.com/JuliaPackaging/Yggdrasil/pull/1051
 [nt]: https://github.com/onecodex/needletail
-[nt-comm]: https://github.com/lh3/biofast/pull/11#issuecomment-633066810
 [fgbio]: http://fulcrumgenomics.github.io/fgbio/
 [commons.io]: https://javadoc.io/static/com.fulcrumgenomics/commons_2.12/1.0.0/com/fulcrumgenomics/commons/io/Io$.html#readLinesFromResource(name:String):Iterator[String]
 [ammnoite]: http://ammonite.io/
