@@ -1,6 +1,6 @@
 CFLAGS=-g -Wall -O2
 LIBS=-lz
-PROG=bedcov_c1_cgr bedcov_nim1_klib bedcov_cr1_klib bedcov_go1 bedcov_d_dgr
+PROG=bedcov_c1_cgr bedcov_nim1_klib bedcov_cr1_klib bedcov_go1 bedcov_d_dgr bedcov_fsharp1
 NIM=nim
 CRYSTAL=crystal
 GO=go
@@ -24,6 +24,9 @@ bedcov_go1:bedcov_go1.go
 
 bedcov_d_dgr:bedcov_d_dgr.d
 	$(LDC) -O3 -release -flto=full $<
+
+bedcov_fsharp1:fsharp/IITree.fs fsharp/Bedcov.fs
+	dotnet build -c Release fsharp/
 
 clean:
 	rm -fr *.dSYM $(PROG)

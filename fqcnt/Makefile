@@ -29,6 +29,10 @@ fqcnt_rs:
 rust: fqcnt_rs
 	@echo "Rust binaries are in ./bin/"
 
+.PHONY: fqcnt_fsharp
+fqcnt_fsharp:fsharp/fqcnt_fsharp.fs
+	dotnet build -c Release fsharp/
+
 # Scala - amm
 # Ammnoite is required to compile and run the scala script. Please obtain from ammonite.io:
 # $ sudo sh -c '(echo "#!/usr/bin/env sh" \
