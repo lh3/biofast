@@ -12,6 +12,7 @@
 |[fqcnt\_js1\_k8.js](fqcnt_js1_k8.js)          |Javascript|                            | 17.5|  9.4|kseq.h port|
 |[fqcnt\_py7x\_pysam.py](fqcnt_py7x_pysam.py)  |Python    |[pysam][pysam]              | 18.5| 12.7|kseq.h binding|
 |[fqcnt\_go1.go](fqcnt_go1.go)                 |Go        |                            | 19.1|  2.8|4-line only|
+|[fqcnt\_go2.go](fqcnt_go2.go)                 |Go        |[bio][bio]                  |     |     |bio        |
 |[fqcnt\_jl2x\_fastx.jl](fqcnt_jl2x_fastx.jl)  |Julia     |[Fastx.jl][fx.jl]           | 19.5|  2.6|4-line only; no startup|
 |[fqcnt\_lua2\_4l.lua](fqcnt_lua2_4l.lua)      |LuaJIT    |                            | 22.8| 10.4|4-line only|
 |[fqcnt\_py8x\_fx.py](fqcnt_py8x_fx.py)        |Python    |[Fastx][fx.py]; cffi        | 24.2| 15.9|kseq.h binding|
@@ -63,3 +64,4 @@
 [fgbio]: http://fulcrumgenomics.github.io/fgbio/
 [commons.io]: https://javadoc.io/static/com.fulcrumgenomics/commons_2.12/1.0.0/com/fulcrumgenomics/commons/io/Io$.html#readLinesFromResource(name:String):Iterator[String]
 [ammnoite]: http://ammonite.io/
+[bio]: https://github.com/shenwei356/bio
