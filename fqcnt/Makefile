@@ -21,6 +21,11 @@ fqcnt_nim1_klib:fqcnt_nim1_klib.nim ../lib/klib.nim
 fqcnt_go1:fqcnt_go1.go
 	$(GO) build $<
 
+fqcnt_go2:fqcnt_go2.go
+	$(GO) get -u github.com/shenwei356/bio
+	$(GO) mod tidy
+	CGO_ENABLED=0 $(GO) build -tags netgo -ldflags '-w -s' -asmflags '-trimpath' $<
+
 .PHONY: fqcnt_rs
 fqcnt_rs:
 	$(CARGO) install --path $(PROJECT_ROOT) --force --bin fqcnt_rustbio --bin fqcnt_needletail --root .
@@ -49,3 +54,4 @@ fqcnt_scala_jar_fgbio: scala/tools/src/com/github/biofast/FgBio.scala
 
 clean:
 	rm -fr *.dSYM $(PROG)
+	rm -fr go.sum
