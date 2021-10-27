@@ -1,10 +1,12 @@
 CFLAGS=-g -Wall -O2
 LIBS=-lz
-PROG=bedcov_c1_cgr bedcov_nim1_klib bedcov_cr1_klib bedcov_go1 bedcov_d_dgr bedcov_fsharp1
+PROG=bedcov_c1_cgr bedcov_nim1_klib bedcov_cr1_klib bedcov_go1 bedcov_rs bedcov_d_dgr bedcov_fsharp1
 NIM=nim
 CRYSTAL=crystal
 GO=go
+CARGO=cargo
 LDC=ldc2
+PROJECT_ROOT := $(shell realpath ../)
 
 .PHONY:all clean
 
@@ -21,6 +23,14 @@ bedcov_cr1_klib:bedcov_cr1_klib.cr ../lib/klib.cr
 
 bedcov_go1:bedcov_go1.go
 	$(GO) build $<
+
+.PHONY: bedcov_rs
+bedcov_rs:
+	$(CARGO) install --path $(PROJECT_ROOT) --force --bin bedcov_rustbio --root .
+
+.PHONY: rust
+rust: fqcnt_rs
+	@echo "Rust binaries are in ./bin/"
 
 bedcov_d_dgr:bedcov_d_dgr.d
 	$(LDC) -O3 -release -flto=full $<
