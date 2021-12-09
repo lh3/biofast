@@ -115,8 +115,9 @@ fn main() {
     // Read through second bed file entry by entry and then
     // and try to find overlaps
 
-    let mut count=0;
+//    let mut count=0;
     for record2 in reader2.records() {
+        let mut count=0;
         let rec2 = record2.expect("Error reading record.");
                 currentcontig2.push(rec2.chrom().to_string());
                 currentcontig2start.push(rec2.start());
@@ -124,12 +125,12 @@ fn main() {
                 currentcontig2length.push(rec2.end()-rec2.start());
 
         if let Some(tree) = trees.get(&rec2.chrom().to_string()) {
-            tree.find(rec2.start()..rec2.end());
-/*                currentcontig2.push(rec2.chrom().to_string());
+            for r in tree.find(rec2.start()..rec2.end()) {
+                currentcontig2.push(rec2.chrom().to_string());
                 currentcontig2start.push(rec2.start());
                 currentcontig2end.push(rec2.end());
                 currentcontig2length.push(rec2.end()-rec2.start());
-                println!("{:?}", currentcontig2);
+/*                println!("{:?}", currentcontig2);
                 println!("{:?}", currentcontig2start);
                 println!("{:?}", currentcontig2end);
                 println!("{:?}", currentcontig2length);
@@ -156,8 +157,8 @@ fn main() {
                         }
                     }
                }
+            }
             println!("{}\t{}\t{}\t{}\t{}", currentcontig2[currentcontig2.len()-1], currentcontig2start[currentcontig2.len()-1], currentcontig2end[currentcontig2.len()-1], count, currentcontig2length[currentcontig2.len()-1]);
-            count=1;
             }
         
     }
