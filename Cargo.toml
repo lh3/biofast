@@ -6,7 +6,7 @@ edition = "2018"
 
 [dependencies]
 flate2 = "1.0.14"
-bio = "0.31.0"
+bio = "0.39.0"
 needletail = "0.4"
 
 [[bin]]
@@ -16,3 +16,7 @@ path = "fqcnt/fqcnt_rs1_rustbio.rs"
 [[bin]]
 name = "fqcnt_needletail"
 path = "fqcnt/fqcnt_rs2_needletail.rs"
+
+[[bin]]
+name = "bedcov_rustbio"
+path = "bedcov/bedcov_rs1_rustbio.rs"
